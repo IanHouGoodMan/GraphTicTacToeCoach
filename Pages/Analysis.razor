@@ -1,0 +1,148 @@
+@page "/analysis"
+@inject TicTacToeEngine Engine
+
+<PageTitle>图论分析</PageTitle>
+
+<section class="hero">
+    <p class="eyebrow">看见每一步的「下一步图」</p>
+    <h1>井字棋 · 图论分析 🔍</h1>
+    <p class="lead">
+        左边是<strong>当前棋盘</strong>（图上的一个点）。右边是<strong>所有合法的下一步</strong>，
+        每一个小棋盘都是一个「子节点」，点开就走到那里。颜色告诉你那一步会通向什么结果。
+    </p>
+</section>
+
+<section class="panel">
+    <div style="display:grid; gap:1.2rem; grid-template-columns: minmax(280px, 1fr) 2fr;">
+        <div class="board-wrap">
+            <span class="status-pill @TurnPillCss">轮到 @_turn 走</span>
+            <div class="board">
+                @for (var i = 0; i < 9; i++)
+                {
+                    var idx = i;
+                    var ch = _board[idx];
+                    var isHint = _bestMoves.Contains(idx);
+                    var classes = "cell" + (ch == 'O' ? " o" : string.Empty)
+                                  + (isHint ? " hint" : string.Empty);
+                    <button class="@classes"
+                            @onclick="() => Place(idx)"
+                            disabled="@(!CanPlace(idx))"
+                            aria-label="@TicTacToeEngine.CellName(idx)">
+                        @(ch == ' ' ? string.Empty : ch.ToString())
+                    </button>
+                }
+            </div>
+            <div class="actions">
+                <button class="btn btn-outline" @onclick="Undo" disabled="@(_history.Count == 0)">↩️ 悔一步</button>
+                <button class="btn btn-primary" @onclick="Reset">🔄 重置</button>
+            </div>
+            <p class="small-note" style="text-align:center;">
+                绿色提示格 = 当前最优走法。
+                这个棋盘的「最优值」是 <strong>@TicTacToeEngine.ScoreLabel(_currentScore)</strong>。
+            </p>
+        </div>
+
+        <div>
+            <h2 style="margin-top:0;">下一步会走到这些棋盘 👇</h2>
+            @if (_moves.Count == 0)
+            {
+                <p class="small-note">这里已经是终局节点啦——没有「下一步」边。</p>
+            }
+            else
+            {
+                <div class="graph-tree">
+                    @foreach (var m in _moves)
+                    {
+                        var cls = "graph-node "
+                                  + ResultClass(_turn, m.Score)
+                                  + (m.IsOptimal ? " optimal" : string.Empty);
+                        <button class="@cls" @onclick="() => Place(m.Index)" title="点这里走到这个棋盘">
+                            <MiniBoard Board="@m.ResultingBoard" Size="86" Aria="@($"走 {TicTacToeEngine.CellName(m.Index)} 之后")" />
+                            <span class="node-label">@TicTacToeEngine.CellName(m.Index)</span>
+                            <span class="node-score">@OutcomeText(_turn, m.Score)</span>
+                            @if (m.IsOptimal) { <span class="badge">⭐ 最优</span> }
+                        </button>
+                    }
+                </div>
+                <p class="small-note" style="margin-top:0.6rem;">
+                    🟢 绿色 = 这一步对当前选手有利；🔴 红色 = 会让对手赢；🟡 黄色 = 双方最优只能平局。
+                </p>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="panel lesson">
+    <h2>📘 怎么读这张图？</h2>
+    <ol>
+        <li>每个<strong>棋盘</strong>就是图的一个<strong>顶点</strong>。</li>
+        <li>每个<strong>合法走法</strong>就是一条<strong>边</strong>，把当前棋盘连到下一个棋盘。</li>
+        <li>电脑用「<strong>极小极大（Minimax）</strong>」算法假设双方都走最聪明的一步，从终局往回算每个节点的「最优值」。</li>
+        <li>你只要每次都走通向「⭐ 最优」节点的那条边，就是最聪明的下法！</li>
+    </ol>
+</section>
+
+@code {
+    private readonly char[] _board = new char[9];
+    private readonly Stack<int> _history = new();
+    private char _turn = TicTacToeEngine.X;
+    private List<MoveInfo> _moves = new();
+    private List<int> _bestMoves = new();
+    private int _currentScore;
+
+    protected override void OnInitialized() => Reset();
+
+    private void Recompute()
+    {
+        _moves = Engine.AnalyseMoves(_board, _turn);
+        _bestMoves = Engine.GetBestMoves(_board, _turn);
+        _currentScore = Engine.Minimax((char[])_board.Clone(), _turn);
+    }
+
+    private bool IsOver => TicTacToeEngine.GetWinner(_board) != ' ';
+    private bool CanPlace(int i) => !IsOver && _board[i] == ' ';
+
+    private void Reset()
+    {
+        for (var i = 0; i < 9; i++) _board[i] = ' ';
+        _history.Clear();
+        _turn = TicTacToeEngine.X;
+        Recompute();
+    }
+
+    private void Place(int i)
+    {
+        if (!CanPlace(i)) return;
+        _board[i] = _turn;
+        _history.Push(i);
+        if (!IsOver) _turn = TicTacToeEngine.Flip(_turn);
+        Recompute();
+    }
+
+    private void Undo()
+    {
+        if (_history.Count == 0) return;
+        var last = _history.Pop();
+        _board[last] = ' ';
+        _turn = TicTacToeEngine.Flip(_turn);
+        Recompute();
+    }
+
+    private string TurnPillCss => _turn == 'X' ? "x" : "o";
+
+    private static string ResultClass(char turn, int score)
+    {
+        // From the perspective of `turn`:
+        if (score == 0) return "draw";
+        if ((turn == 'X' && score == 1) || (turn == 'O' && score == -1)) return "win";
+        return "lose";
+    }
+
+    private static string OutcomeText(char turn, int score) =>
+        ResultClass(turn, score) switch
+        {
+            "win"  => $"{turn} 必胜 ✅",
+            "lose" => $"{TicTacToeEngine.Flip(turn)} 必胜 ❌",
+            _      => "和局 🤝"
+        };
+}

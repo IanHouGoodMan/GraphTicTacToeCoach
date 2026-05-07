@@ -1,0 +1,112 @@
+@page "/play"
+@inject TicTacToeEngine Engine
+
+<PageTitle>自由对战</PageTitle>
+
+<section class="hero">
+    <p class="eyebrow">两人在同一台电脑上玩</p>
+    <h1>井字棋 · 自由对战 ✏️</h1>
+    <p class="lead">轮流点击格子，X 先走、O 后走。试试看谁会赢！</p>
+</section>
+
+<section class="panel">
+    <div class="board-wrap">
+        <div>
+            <span class="status-pill @(StatusPillCss())">@StatusText</span>
+        </div>
+
+        <div class="board" role="grid" aria-label="井字棋棋盘">
+            @for (var i = 0; i < 9; i++)
+            {
+                var idx = i;
+                var ch = _board[idx];
+                var classes = "cell" + (ch == 'O' ? " o" : string.Empty)
+                              + (_winLine.Contains(idx) ? " win" : string.Empty);
+                <button class="@classes"
+                        @onclick="() => Place(idx)"
+                        disabled="@(!CanPlace(idx))"
+                        aria-label="@TicTacToeEngine.CellName(idx)">
+                    @(ch == ' ' ? string.Empty : ch.ToString())
+                </button>
+            }
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" @onclick="Reset">🔄 重新开始</button>
+            <button class="btn btn-outline" @onclick="Undo" disabled="@(_history.Count == 0)">↩️ 悔一步</button>
+        </div>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>🛤️ 走廊视图：每走一步，未来都在「收缩」</h2>
+    <p class="lead">
+        每个亮色方块是你们真的下过的一步；下面那些灰色小棋盘，就是当时本来也可以走、但没有走的「兄弟」。
+        每选一格，就把好多种可能的对局一下子剪掉了，这就是图论里说的<strong>剪枝</strong>。
+    </p>
+    <MoveCorridor Board="_board" History="_history.Reverse().ToArray()" />
+</section>
+
+<section class="panel">
+    <h2>💡 小提示</h2>
+    <ul>
+        <li>三个 X 或三个 O 连成一行、一列或一条对角线就赢了。</li>
+        <li>如果九个格子都满了还没人连成线，就是<strong>和局</strong>。</li>
+        <li>下完之后，去 <a href="analysis">图论分析</a> 看看你刚才走的那一步在图上是哪条「边」。</li>
+    </ul>
+</section>
+
+@code {
+    private readonly char[] _board = new char[9];
+    private readonly Stack<int> _history = new();
+    private char _turn = TicTacToeEngine.X;
+    private int[] _winLine = Array.Empty<int>();
+
+    protected override void OnInitialized() => Reset();
+
+    private void Reset()
+    {
+        for (var i = 0; i < 9; i++) _board[i] = ' ';
+        _history.Clear();
+        _turn = TicTacToeEngine.X;
+        _winLine = Array.Empty<int>();
+    }
+
+    private bool IsOver => TicTacToeEngine.GetWinner(_board) != ' ';
+
+    private bool CanPlace(int i) => !IsOver && _board[i] == ' ';
+
+    private void Place(int i)
+    {
+        if (!CanPlace(i)) return;
+        _board[i] = _turn;
+        _history.Push(i);
+        _winLine = TicTacToeEngine.WinningLine(_board);
+        if (!IsOver) _turn = TicTacToeEngine.Flip(_turn);
+    }
+
+    private void Undo()
+    {
+        if (_history.Count == 0) return;
+        var last = _history.Pop();
+        _board[last] = ' ';
+        _turn = TicTacToeEngine.Flip(_turn);
+        _winLine = Array.Empty<int>();
+    }
+
+    private string StatusText => TicTacToeEngine.GetWinner(_board) switch
+    {
+        'X' => "🎉 X 获胜！",
+        'O' => "🎉 O 获胜！",
+        'D' => "🤝 和局！",
+        _   => $"轮到 {_turn} 走"
+    };
+
+    private string StatusPillCss() => TicTacToeEngine.GetWinner(_board) switch
+    {
+        'X' => "x",
+        'O' => "o",
+        'D' => "draw",
+        _   => _turn == 'X' ? "x" : "o"
+    };
+}

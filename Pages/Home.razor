@@ -1,362 +1,78 @@
-﻿@page "/"
+@page "/"
 
-<PageTitle>井字棋图论教学器</PageTitle>
+<PageTitle>井字棋图论小课堂</PageTitle>
 
 <section class="hero">
-	<p class="eyebrow">图论 x 博弈论 x 小学数学融合班</p>
-	<h1>井字棋最优策略实验室</h1>
-
-	<div style="display: flex; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap;">
-		<a href="/graph-theory-intro" style="
-			display: inline-block;
-			background: linear-gradient(90deg, #f9d423 0%, #ff4e50 100%);
-			color: #222;
-			font-weight: bold;
-			border-radius: 1.5rem;
-			padding: 0.8rem 2rem;
-			font-size: 1.2rem;
-			margin: 0.5rem;
-			box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-			text-decoration: none;
-			transition: background 0.2s;
-		">
-			🌟 图论基础知识（点我学习）
-		</a>
-	</div>
-	<p>
-		结论先行：在双方都理性、都走最优时，井字棋是和局。
-		所以后手最多逼平；但如果先手失误，后手仍可能赢。
-	</p>
+    <p class="eyebrow">三年级 · 数学融合课</p>
+    <h1>用井字棋认识「图」🌐</h1>
+    <p class="lead">
+        小朋友你好！这里有一个秘密：每盘井字棋，其实都是一张「图」。
+        每个棋盘的样子是一个<strong>点</strong>，每走一步是一条<strong>线</strong>。
+        我们一起来玩、来画、来证明吧！
+    </p>
 </section>
 
-<section class="panel-grid">
-	<article class="panel board-panel">
-		<h2>棋盘</h2>
-		<p class="small-note">当前走子：<strong>@CurrentPlayer</strong> | @GameStatus</p>
+<section class="card-grid">
+    <a class="feature-card" href="graph-theory-intro">
+        <span class="icon">🌐</span>
+        <h3>1. 图论入门</h3>
+        <p>什么是「点」和「线」？用小朋友们之间的友谊来认识图。</p>
+    </a>
 
-		<div class="board" role="grid" aria-label="井字棋棋盘">
-			@for (var i = 0; i < 9; i++)
-			{
-				var idx = i;
-				var isHint = RecommendedMoves.Contains(idx);
-				<button class="cell @(isHint ? "hint" : string.Empty)"
-						@onclick="() => PlaceAt(idx)"
-						disabled="@(!CanPlaceAt(idx))"
-						aria-label="@(ToCellName(idx))">
-					@Board[idx]
-				</button>
-			}
-		</div>
+    <a class="feature-card" href="play">
+        <span class="icon">✏️</span>
+        <h3>2. 自由对战</h3>
+        <p>和爸爸妈妈、同学一起在同一台电脑上下井字棋。</p>
+    </a>
 
-		<div class="actions">
-			<button class="btn btn-primary" @onclick="PlayBestMove" disabled="@IsTerminal">走一步最优棋</button>
-			<button class="btn btn-secondary" @onclick="PlayOptimalGame">演示最优对局</button>
-			<button class="btn btn-outline" @onclick="ResetGame">重置</button>
-		</div>
-	</article>
+    <a class="feature-card" href="analysis">
+        <span class="icon">🔍</span>
+        <h3>3. 图论分析</h3>
+        <p>看看每一步会走到哪个「下一个棋盘」，颜色告诉你输赢。</p>
+    </a>
 
-	<article class="panel analysis-panel">
-		<h2>图论视角</h2>
-		<p>
-			把每个局面当作一个节点，把一次合法落子当作一条边。
-			当前节点的“最优值”是：<strong>@NodeScoreLabel(CurrentScore)</strong>。
-		</p>
-		<p class="small-note">
-			从初始局面出发（X 先手），最优值为：<strong>@NodeScoreLabel(StartScore)</strong>。
-		</p>
+    <a class="feature-card" href="vs-ai">
+        <span class="icon">🤖</span>
+        <h3>4. 人机对战</h3>
+        <p>和聪明的电脑下棋。它会用图找出最好的一步。</p>
+    </a>
 
-		<div class="moves">
-			@if (MoveAnalyses.Count == 0)
-			{
-				<p class="small-note">终局节点没有后继边。</p>
-			}
-			else
-			{
-				@foreach (var item in MoveAnalyses)
-				{
-					<div class="move-card @(item.IsOptimal ? "optimal" : string.Empty)">
-						<div>
-							<strong>@ToCellName(item.Index)</strong>
-							<span class="small-note">(@item.Symbol)</span>
-						</div>
-						<div>@NodeScoreLabel(item.Score)</div>
-					</div>
-				}
-			}
-		</div>
-	</article>
+    <a class="feature-card" href="proof">
+        <span class="icon">📜</span>
+        <h3>5. 和局证明</h3>
+        <p>为什么两个人都很聪明的话，井字棋一定平局？用图来证明。</p>
+    </a>
+
+    <div class="feature-card" style="opacity:.65; cursor:not-allowed;">
+        <span class="icon">🪞</span>
+        <h3>6. 模仿小游戏</h3>
+        <p>（即将上线）「模仿」也是一种很有意思的图——下次再做哦！</p>
+    </div>
 </section>
 
-<section class="panel lesson">
-	<h2>课堂讲解建议</h2>
-	<ol>
-		<li>先让孩子自由下两盘，再对比“最优提示”差异。</li>
-		<li>解释“节点/边”：局面是点，落子是线，整盘棋是一张有向图。</li>
-		<li>让孩子观察：为什么有些边会把自己送入必败节点。</li>
-	</ol>
+<section class="hero" style="margin-top:1.5rem;">
+    <p class="eyebrow">第二条主线 · 一笔画</p>
+    <h1>欧拉爷爷的一笔画 🖊️</h1>
+    <p class="lead">
+        300 年前，欧拉爷爷研究「能不能一笔走完所有桥」，从此发明了图论。
+        我们也来玩一玩——有些图能一笔画，有些就不行，<strong>背后有一条神奇的规律</strong>。
+    </p>
 </section>
 
-@code {
-	private readonly Dictionary<string, int> memo = new();
-	private readonly char[] Board = new char[9];
-
-	private char CurrentPlayer { get; set; } = 'X';
-
-	private bool IsTerminal => GetWinner(Board) != ' ';
-
-	private int StartScore => Minimax(new[] { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }, 'X');
-
-	private int CurrentScore => Minimax((char[])Board.Clone(), CurrentPlayer);
-
-	private string GameStatus
-	{
-		get
-		{
-			var winner = GetWinner(Board);
-			return winner switch
-			{
-				'X' => "X 获胜",
-				'O' => "O 获胜",
-				'D' => "平局",
-				_ => "对局进行中"
-			};
-		}
-	}
-
-	private List<int> RecommendedMoves => GetBestMoves(Board, CurrentPlayer);
-
-	private List<MoveAnalysis> MoveAnalyses
-	{
-		get
-		{
-			var analyses = new List<MoveAnalysis>();
-			if (IsTerminal)
-			{
-				return analyses;
-			}
-
-			var bestMoves = GetBestMoves(Board, CurrentPlayer);
-			for (var i = 0; i < 9; i++)
-			{
-				if (Board[i] != ' ')
-				{
-					continue;
-				}
-
-				var next = (char[])Board.Clone();
-				next[i] = CurrentPlayer;
-				var nextPlayer = Flip(CurrentPlayer);
-				var score = Minimax(next, nextPlayer);
-
-				analyses.Add(new MoveAnalysis(
-					i,
-					CurrentPlayer,
-					score,
-					bestMoves.Contains(i)));
-			}
-
-			return analyses;
-		}
-	}
-
-	protected override void OnInitialized()
-	{
-		ResetGame();
-	}
-
-	private void ResetGame()
-	{
-		for (var i = 0; i < Board.Length; i++)
-		{
-			Board[i] = ' ';
-		}
-
-		CurrentPlayer = 'X';
-	}
-
-	private bool CanPlaceAt(int index) => !IsTerminal && Board[index] == ' ';
-
-	private void PlaceAt(int index)
-	{
-		if (!CanPlaceAt(index))
-		{
-			return;
-		}
-
-		Board[index] = CurrentPlayer;
-		if (!IsTerminal)
-		{
-			CurrentPlayer = Flip(CurrentPlayer);
-		}
-	}
-
-	private void PlayBestMove()
-	{
-		if (IsTerminal)
-		{
-			return;
-		}
-
-		var bestMoves = GetBestMoves(Board, CurrentPlayer);
-		if (bestMoves.Count == 0)
-		{
-			return;
-		}
-
-		PlaceAt(bestMoves[0]);
-	}
-
-	private void PlayOptimalGame()
-	{
-		ResetGame();
-		while (!IsTerminal)
-		{
-			PlayBestMove();
-		}
-	}
-
-	private static string ToCellName(int idx)
-	{
-		var row = (idx / 3) + 1;
-		var col = (idx % 3) + 1;
-		return $"第{row}行第{col}列";
-	}
-
-	private static char Flip(char player) => player == 'X' ? 'O' : 'X';
-
-	private static char GetWinner(IReadOnlyList<char> board)
-	{
-		int[][] lines =
-		[
-			[0, 1, 2], [3, 4, 5], [6, 7, 8],
-			[0, 3, 6], [1, 4, 7], [2, 5, 8],
-			[0, 4, 8], [2, 4, 6]
-		];
-
-		foreach (var line in lines)
-		{
-			var a = line[0];
-			var b = line[1];
-			var c = line[2];
-			if (board[a] != ' ' && board[a] == board[b] && board[b] == board[c])
-			{
-				return board[a];
-			}
-		}
-
-		return board.All(c => c != ' ') ? 'D' : ' ';
-	}
-
-	private List<int> GetBestMoves(IReadOnlyList<char> board, char turn)
-	{
-		var winner = GetWinner(board);
-		if (winner != ' ')
-		{
-			return new List<int>();
-		}
-
-		var bestMoves = new List<int>();
-		var bestScore = turn == 'X' ? int.MinValue : int.MaxValue;
-
-		for (var i = 0; i < 9; i++)
-		{
-			if (board[i] != ' ')
-			{
-				continue;
-			}
-
-			var next = board.ToArray();
-			next[i] = turn;
-			var score = Minimax(next, Flip(turn));
-
-			if (turn == 'X')
-			{
-				if (score > bestScore)
-				{
-					bestScore = score;
-					bestMoves.Clear();
-					bestMoves.Add(i);
-				}
-				else if (score == bestScore)
-				{
-					bestMoves.Add(i);
-				}
-			}
-			else
-			{
-				if (score < bestScore)
-				{
-					bestScore = score;
-					bestMoves.Clear();
-					bestMoves.Add(i);
-				}
-				else if (score == bestScore)
-				{
-					bestMoves.Add(i);
-				}
-			}
-		}
-
-		return bestMoves;
-	}
-
-	private int Minimax(IReadOnlyList<char> board, char turn)
-	{
-		var winner = GetWinner(board);
-		if (winner == 'X')
-		{
-			return 1;
-		}
-
-		if (winner == 'O')
-		{
-			return -1;
-		}
-
-		if (winner == 'D')
-		{
-			return 0;
-		}
-
-		var key = $"{new string(board.ToArray())}:{turn}";
-		if (memo.TryGetValue(key, out var cached))
-		{
-			return cached;
-		}
-
-		var best = turn == 'X' ? int.MinValue : int.MaxValue;
-
-		for (var i = 0; i < 9; i++)
-		{
-			if (board[i] != ' ')
-			{
-				continue;
-			}
-
-			var next = board.ToArray();
-			next[i] = turn;
-			var score = Minimax(next, Flip(turn));
-
-			if (turn == 'X')
-			{
-				best = Math.Max(best, score);
-			}
-			else
-			{
-				best = Math.Min(best, score);
-			}
-		}
-
-		memo[key] = best;
-		return best;
-	}
-
-	private static string NodeScoreLabel(int score) => score switch
-	{
-		1 => "X 在最优对抗下可赢",
-		-1 => "O 在最优对抗下可赢",
-		_ => "双方最优为平局"
-	};
-
-	private sealed record MoveAnalysis(int Index, char Symbol, int Score, bool IsOptimal);
-}
+<section class="card-grid">
+    <a class="feature-card" href="euler">
+        <span class="icon">🖊️</span>
+        <h3>A. 一笔画入门</h3>
+        <p>什么是「度」？为什么七桥问题走不通？欧拉的小定理。</p>
+    </a>
+    <a class="feature-card" href="euler/practice">
+        <span class="icon">🎮</span>
+        <h3>B. 一笔画练习</h3>
+        <p>抽一道题来挑战！可以的、不可以的题目都有，先猜后画。</p>
+    </a>
+    <a class="feature-card" href="euler/analysis">
+        <span class="icon">🔬</span>
+        <h3>C. 一笔画分析</h3>
+        <p>看奇度顶点在哪、电脑找出可行的笔顺，验证欧拉定理。</p>
+    </a>
+</section>

@@ -1,0 +1,156 @@
+@using GraphTicTacToeCoach.Services
+@inject TicTacToeEngine Engine
+
+@*
+  走廊视图：把已经下过的每一步排成一条横向的链。
+  每一步下方挂着「当时没选的兄弟」迷你棋盘，灰掉表示「这些可能性都被剪枝了」。
+  右侧给出还剩多少种可能对局，让小朋友直观看到「每走一步，未来都在收缩」。
+*@
+
+<div class="corridor">
+    <div class="corridor-meta">
+        <span class="corridor-pill">🌳 还剩 <strong>@FormatCount(_currentRemaining)</strong> 种可能对局</span>
+        @if (_initialTotal > 0 && _currentRemaining < _initialTotal)
+        {
+            <span class="corridor-pill ghost">起点共 @FormatCount(_initialTotal) 种</span>
+        }
+    </div>
+
+    <div class="corridor-track">
+        @* 起点节点 *@
+        <div class="corridor-step start">
+            <div class="corridor-label">开局</div>
+            <MiniBoard Board="_emptyBoard" Size="64" Aria="空棋盘" />
+            <div class="corridor-count">@FormatCount(_initialTotal) 种</div>
+        </div>
+
+        @for (var s = 0; s < _steps.Count; s++)
+        {
+            var step = _steps[s];
+            var siblings = _siblings[s];
+            var verdict = GetVerdict(step);
+            <div class="corridor-arrow">→</div>
+            <div class="corridor-step chosen">
+                <div class="corridor-label">第 @(s + 1) 步 · @step.Symbol</div>
+                <MiniBoard Board="step.BoardAfter" Size="64" Aria="@($"第{s+1}步后")" />
+                <div class="corridor-count">剩 @FormatCount(step.GamesRemaining)</div>
+                @if (!string.IsNullOrEmpty(verdict.Badge))
+                {
+                    <div class="corridor-verdict @verdict.CssClass">@verdict.Badge</div>
+                    <div class="corridor-verdict-note">@verdict.Note</div>
+                }
+
+                @if (siblings.Count > 0)
+                {
+                    <div class="corridor-siblings" title="这些是当时没选的走法，整个分支都被剪掉了">
+                        @foreach (var sib in siblings)
+                        {
+                            <div class="corridor-sibling">
+                                <MiniBoard Board="sib.BoardAfter" Size="36" FillColor="#ececec" Aria="被剪掉的走法" />
+                                <span class="corridor-sibling-x">✕</span>
+                            </div>
+                        }
+                    </div>
+                    <div class="corridor-pruned">剪掉 @siblings.Count 种走法</div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    /// <summary>当前棋盘（已经下完的样子）。</summary>
+    [Parameter, EditorRequired] public char[] Board { get; set; } = default!;
+
+    /// <summary>下子顺序：从最早到最近。</summary>
+    [Parameter, EditorRequired] public IReadOnlyList<int> History { get; set; } = Array.Empty<int>();
+
+    /// <summary>X 是否先手（默认 true）。</summary>
+    [Parameter] public char FirstPlayer { get; set; } = TicTacToeEngine.X;
+
+    private static readonly char[] _emptyBoard = new[] { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+
+    private List<GameStep> _steps = new();
+    private List<List<GameStep>> _siblings = new();
+    private long _initialTotal;
+    private long _currentRemaining;
+
+    protected override void OnParametersSet()
+    {
+        _steps = new List<GameStep>();
+        _siblings = new List<List<GameStep>>();
+
+        var working = new char[9];
+        for (var i = 0; i < 9; i++) working[i] = ' ';
+
+        _initialTotal = Engine.CountPossibleGames(working, FirstPlayer);
+
+        var turn = FirstPlayer;
+        foreach (var move in History)
+        {
+            // 收集本步「兄弟」：当时所有合法走法里没被选的那些
+            var sibs = new List<GameStep>();
+            for (var i = 0; i < 9; i++)
+            {
+                if (i == move) continue;
+                if (working[i] != ' ') continue;
+                if (TicTacToeEngine.GetWinner(working) != ' ') break; // 终局后没有兄弟
+                working[i] = turn;
+                var snap = (char[])working.Clone();
+                var rem = Engine.CountPossibleGames(working, TicTacToeEngine.Flip(turn));
+                working[i] = ' ';
+                sibs.Add(new GameStep(i, turn, snap, rem));
+            }
+
+            // 真实走的这一步
+            working[move] = turn;
+            var afterSnap = (char[])working.Clone();
+            var nextTurn = TicTacToeEngine.Flip(turn);
+            var remaining = TicTacToeEngine.GetWinner(working) != ' '
+                ? 1
+                : Engine.CountPossibleGames(working, nextTurn);
+
+            _steps.Add(new GameStep(move, turn, afterSnap, remaining));
+            _siblings.Add(sibs);
+            turn = nextTurn;
+        }
+
+        _currentRemaining = _steps.Count == 0 ? _initialTotal : _steps[^1].GamesRemaining;
+    }
+
+    private static string FormatCount(long n) => n.ToString("N0");
+
+    private CorridorVerdict GetVerdict(GameStep step)
+    {
+        var winner = TicTacToeEngine.GetWinner(step.BoardAfter);
+        if (winner == TicTacToeEngine.X)
+        {
+            return new CorridorVerdict("win-x", "X 已经赢啦", "从这一步开始，比赛已经结束，不用再往后想啦。", true);
+        }
+
+        if (winner == TicTacToeEngine.O)
+        {
+            return new CorridorVerdict("win-o", "O 已经赢啦", "从这一步开始，比赛已经结束，不用再往后想啦。", true);
+        }
+
+        if (winner == TicTacToeEngine.Draw)
+        {
+            return new CorridorVerdict("draw", "已经打平啦", "棋盘已经满了，谁也不能再赢啦。", true);
+        }
+
+        var nextTurn = TicTacToeEngine.Flip(step.Symbol);
+        var score = Engine.Minimax((char[])step.BoardAfter.Clone(), nextTurn);
+
+        return nextTurn switch
+        {
+            TicTacToeEngine.X when score == 1 => new CorridorVerdict("locked-x", "X 这时已经稳稳会赢", "只要后面不乱下，X 最后一定能赢。", false),
+            TicTacToeEngine.X when score == -1 => new CorridorVerdict("locked-o", "O 这时已经稳稳会赢", "虽然现在轮到 X，可是 O 已经占了上风，X 救不回来啦。", false),
+            TicTacToeEngine.X => new CorridorVerdict("locked-draw", "这时已经能保住平局", "只要两边都认真下，最后就会打平。", false),
+            TicTacToeEngine.O when score == -1 => new CorridorVerdict("locked-o", "O 这时已经稳稳会赢", "只要后面不乱下，O 最后一定能赢。", false),
+            TicTacToeEngine.O when score == 1 => new CorridorVerdict("locked-x", "X 这时已经稳稳会赢", "虽然现在轮到 O，可是 X 已经占了上风，O 救不回来啦。", false),
+            _ => new CorridorVerdict("locked-draw", "这时已经能保住平局", "只要两边都认真下，最后就会打平。", false)
+        };
+    }
+
+    private sealed record CorridorVerdict(string CssClass, string Badge, string Note, bool IsFinal);
+}

@@ -1,0 +1,15 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# Node / React
+node_modules/
+web-react/dist/
+web-react/.vite/
+
+# OS
+Thumbs.db
+.DS_Store

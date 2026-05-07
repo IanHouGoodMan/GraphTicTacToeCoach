@@ -1,0 +1,45 @@
+@using GraphTicTacToeCoach.Services
+
+@*
+  画一个迷你 3x3 棋盘的 SVG，可以嵌进图节点里。
+  size: 整体尺寸（像素）。highlight: 要高亮的格子下标（用于胜利连线）。
+*@
+
+<svg viewBox="0 0 90 90" width="@Size" height="@Size" class="mini-board" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="@Aria">
+  <rect x="0" y="0" width="90" height="90" rx="10" ry="10" fill="@FillColor" stroke="#3a2c1f" stroke-width="1.5" />
+
+  @* 网格线 *@
+  <line x1="30" y1="6" x2="30" y2="84" stroke="#3a2c1f" stroke-width="1.2" />
+  <line x1="60" y1="6" x2="60" y2="84" stroke="#3a2c1f" stroke-width="1.2" />
+  <line x1="6"  y1="30" x2="84" y2="30" stroke="#3a2c1f" stroke-width="1.2" />
+  <line x1="6"  y1="60" x2="84" y2="60" stroke="#3a2c1f" stroke-width="1.2" />
+
+  @for (var i = 0; i < 9; i++)
+  {
+      var cx = (i % 3) * 30 + 15;
+      var cy = (i / 3) * 30 + 15;
+      var ch = i < (Board?.Length ?? 0) ? Board![i] : ' ';
+      var isHi = Highlight is not null && Highlight.Contains(i);
+      if (isHi)
+      {
+          <rect x="@(cx - 14)" y="@(cy - 14)" width="28" height="28" rx="4" fill="#ffe680" />
+      }
+      if (ch == 'X')
+      {
+          <line x1="@(cx - 9)" y1="@(cy - 9)" x2="@(cx + 9)" y2="@(cy + 9)" stroke="#d6336c" stroke-width="3" stroke-linecap="round" />
+          <line x1="@(cx + 9)" y1="@(cy - 9)" x2="@(cx - 9)" y2="@(cy + 9)" stroke="#d6336c" stroke-width="3" stroke-linecap="round" />
+      }
+      else if (ch == 'O')
+      {
+          <circle cx="@cx" cy="@cy" r="9" fill="none" stroke="#1c7ed6" stroke-width="3" />
+      }
+  }
+</svg>
+
+@code {
+    [Parameter] public char[]? Board { get; set; }
+    [Parameter] public int Size { get; set; } = 90;
+    [Parameter] public int[]? Highlight { get; set; }
+    [Parameter] public string FillColor { get; set; } = "#fffaf0";
+    [Parameter] public string Aria { get; set; } = "棋盘";
+}

@@ -1,10 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="app-shell">
-    <header class="top-nav">
-        <NavMenu />
-    </header>
-    <main>
-        @Body
+    <NavMenu />
+    <main class="page-main">
+        <div class="page-container">
+            @Body
+        </div>
+        <footer class="page-footer">
+            <span>🌳 给三年级小朋友的图论小课堂 · 用井字棋认识图</span>
+        </footer>
     </main>
 </div>
