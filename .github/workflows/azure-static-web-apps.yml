@@ -1,4 +1,4 @@
-﻿name: Azure Static Web Apps CI/CD
+﻿name: ianhou teaching love-kids React SWA CI/CD
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: Build and Deploy
+    name: Build and Deploy React+TS only
     steps:
       - uses: actions/checkout@v4
 

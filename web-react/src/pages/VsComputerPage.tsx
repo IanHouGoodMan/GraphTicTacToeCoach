@@ -116,7 +116,7 @@ export default function VsComputerPage() {
         <p className="eyebrow">第 3 课 · 算法在思考</p>
         <h1>算法对战 · 看电脑怎么搜索 🧠</h1>
         <p className="lead">
-          这里的电脑<strong>不是 AI</strong>，没有训练过，也不会学习。它用的是图论里很经典的
+          这里的电脑没有训练过，也不会学习。它用的是图论里很经典的传统算法：
           <strong>minimax 搜索算法</strong>：把所有可能的下一步当作「树的子节点」展开，
           逐个打分，再把不好的那些<strong>剪掉</strong>。
         </p>

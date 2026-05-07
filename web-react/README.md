@@ -1,11 +1,12 @@
-# 图论小学堂 — React + TypeScript 前端
+# ianhou 爱孩子教学 · 图论小学堂 — React + TypeScript 前端
 
 面向小学三年级（适当前瞻）的图论学习 Web 应用。
 
 ## 内容
 
 - 📐 **图论基础**：点 / 边 / 度数 / 路径 / 连通 / 树 / 一笔画 / 博弈树。
-- 🧠 **算法对战**：电脑用 **minimax 搜索算法**（传统算法，不是 AI）下井字棋。
+- 🔎 **数学证明**：握手定理、一笔画判定、井字棋博弈树、minimax 正确性证明。
+- 🧠 **算法对战**：电脑用 **minimax 搜索算法**（传统确定性算法）下井字棋。
   - 候选走法可视化、剪枝高亮、思考日志、走廊视图（未来如何收缩）。
 - ✏️ **一笔画练习**：基于 SVG + Pointer Events，**iPad / iPhone 用手指或触控笔**直接画线。
 
@@ -28,10 +29,26 @@ npm run build
 
 ## 部署到 Azure Static Web Apps
 
+目标网站名建议使用：`ianhou-teaching-love-kids-graph`。
+
+仓库根目录包含 `azure.yaml` 和 `infra/main.bicep`，配置为**只发布 React + TypeScript 项目**：
+
+- `project = ./web-react`
+- `appLocation = web-react`
+- `outputLocation = dist`
+
+可用 Azure Developer CLI：
+
+```bash
+azd up
+```
+
+也可以继续使用 GitHub Actions：
+
 仓库根目录已经放好 `.github/workflows/azure-static-web-apps.yml`：
 
 1. 在 Azure Portal 创建一个 **Static Web App**（Free 套餐即可），选择 `Custom` 部署源（不让它自动建工作流）。
 2. 把它生成的 **deployment token** 加到 GitHub 仓库 Secrets，名称 `AZURE_STATIC_WEB_APPS_API_TOKEN`。
 3. push 到 `main` 即可自动构建并发布。
 
-`app_location = web-react`，`output_location = dist`。
+`app_location = web-react`，`output_location = dist`，不会发布旧的 .NET/Blazor 项目。

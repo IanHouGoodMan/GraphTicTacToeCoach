@@ -1,0 +1,6 @@
+name: ianhou-teaching-love-kids-graph
+services:
+  web:
+    project: ./web-react
+    language: ts
+    host: staticwebapp

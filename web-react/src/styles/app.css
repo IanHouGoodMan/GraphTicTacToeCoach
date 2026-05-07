@@ -101,7 +101,7 @@ body {
 .status-pill.o { background: #e7f5ff; color: #1864ab; }
 .status-pill.draw { background: #eef2f6; color: #495057; }
 
-/* ===== AI Thinker visualization ===== */
+/* ===== Algorithm thinker visualization ===== */
 .thinker { display: grid; gap: .8rem; grid-template-columns: 1fr; }
 @media (min-width: 760px) { .thinker { grid-template-columns: 1.1fr 1fr; } }
 
@@ -214,3 +214,22 @@ body {
   background: #fff; border-radius: 50%; padding: 0 2px; line-height: 1;
 }
 .corridor-pruned { margin-top: .25rem; font-size: .72rem; color: #8a6a3a; }
+
+/* ===== Proof lessons ===== */
+.proof-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
+.proof-card {
+  background: #fff; border-radius: 16px; padding: 1rem;
+  border: 1px solid #f1d9a8; box-shadow: 0 5px 16px rgba(0,0,0,.05);
+}
+.proof-card.wide { grid-column: 1 / -1; }
+.proof-card h2 { margin: .25rem 0 .5rem; font-size: 1.15rem; }
+.proof-tag {
+  display: inline-flex; margin: 0; padding: .18rem .55rem; border-radius: 999px;
+  background: #e7f5ff; color: #1864ab; font-size: .8rem; font-weight: 800;
+}
+.proof-box {
+  margin: .65rem 0; padding: .75rem .85rem; border-radius: 12px;
+  background: #fffaf0; border-left: 4px solid #ffd97d; line-height: 1.65;
+}
+.proof-note { color: #6b5a43; background: #f7f3e8; border-radius: 12px; padding: .65rem .8rem; }
+.check-list { line-height: 1.7; }

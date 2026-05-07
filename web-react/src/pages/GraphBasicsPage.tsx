@@ -70,7 +70,8 @@ export default function GraphBasicsPage() {
         <p className="lead">
           电脑玩井字棋，就是在这棵树上「往前看几步」，挑出最好的那条路走。
           这个方法叫 <strong>minimax</strong>（极小化极大），它是一个传统的<strong>搜索算法</strong>，
-          不是 AI、也不需要训练，靠的就是把所有可能想清楚。去 <a href="#/vs-computer">算法对战</a> 看它怎么思考。
+          不需要训练，靠的就是把所有可能想清楚。先去 <a href="#/proofs">数学证明</a> 看为什么可靠，
+          再去 <a href="#/vs-computer">算法对战</a> 看它怎么思考。
         </p>
       </section>
 

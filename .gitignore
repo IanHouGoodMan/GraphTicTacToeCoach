@@ -13,3 +13,4 @@ web-react/.vite/
 # OS
 Thumbs.db
 .DS_Store
+web-react/tsconfig.tsbuildinfo

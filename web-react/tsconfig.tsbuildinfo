@@ -1,1 +1,0 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/components/miniboard.tsx","./src/components/movecorridor.tsx","./src/engine/euler.ts","./src/engine/tictactoe.ts","./src/pages/eulerpracticepage.tsx","./src/pages/graphbasicspage.tsx","./src/pages/homepage.tsx","./src/pages/vscomputerpage.tsx"],"version":"5.9.3"}

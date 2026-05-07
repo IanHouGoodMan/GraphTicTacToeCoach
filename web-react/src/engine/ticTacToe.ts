@@ -1,4 +1,4 @@
-// 井字棋引擎 + 带「思考过程」的 minimax，用于 AI 决策可视化。
+// 井字棋引擎 + 带「思考过程」的 minimax，用于传统搜索算法决策可视化。
 export type Player = 'X' | 'O';
 export type Cell = Player | ' ';
 export type Board = Cell[]; // length 9
