@@ -1,0 +1,22 @@
+.app-shell[b-65az36cq5g] {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #fff9ef 0%, #fffdf8 100%);
+}
+
+.top-nav[b-65az36cq5g] {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+main[b-65az36cq5g] {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 1.2rem;
+}
+
+@media (max-width: 640px) {
+    main[b-65az36cq5g] {
+        padding: 0.9rem;
+    }
+}
