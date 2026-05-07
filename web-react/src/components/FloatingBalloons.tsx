@@ -53,11 +53,17 @@ const moments: Moment[] = [
 ];
 
 const balloonColors = ['#ff7e9f', '#ffd166', '#74c0fc', '#95d5b2', '#b197fc', '#ffb86b'];
+const minIntervalSeconds = 2;
+const maxIntervalSeconds = 30;
 
 export default function FloatingBalloons() {
   const [enabled, setEnabled] = useState(() => {
     if (typeof window === 'undefined') return true;
     return window.localStorage.getItem('graph-coach-balloons') !== 'off';
+  });
+  const [intervalSeconds, setIntervalSeconds] = useState(() => {
+    if (typeof window === 'undefined') return 10;
+    return clampInterval(Number(window.localStorage.getItem('graph-coach-balloon-interval') ?? 10));
   });
   const [balloon, setBalloon] = useState<BalloonState | null>(null);
   const [pop, setPop] = useState<PopState | null>(null);
@@ -70,6 +76,10 @@ export default function FloatingBalloons() {
   }, [enabled]);
 
   useEffect(() => {
+    window.localStorage.setItem('graph-coach-balloon-interval', String(intervalSeconds));
+  }, [intervalSeconds]);
+
+  useEffect(() => {
     if (!enabled) {
       clearTimer(spawnTimer);
       clearTimer(popTimer);
@@ -78,9 +88,9 @@ export default function FloatingBalloons() {
       return;
     }
 
-    if (balloon || pop || spawnTimer.current !== null) return;
+    if (balloon || spawnTimer.current !== null) return;
 
-    const delay = started.current ? randomInt(8000, 14000) : randomInt(1800, 4200);
+    const delay = started.current ? getSpawnDelay(intervalSeconds) : randomInt(1800, 4200);
     started.current = true;
     spawnTimer.current = window.setTimeout(() => {
       spawnTimer.current = null;
@@ -88,13 +98,13 @@ export default function FloatingBalloons() {
         id: Date.now(),
         x: randomInt(12, 88),
         color: pick(balloonColors),
-        duration: randomInt(13000, 18000),
+        duration: randomInt(19000, 26000),
         size: randomInt(58, 78)
       });
     }, delay);
 
     return () => clearTimer(spawnTimer);
-  }, [enabled, balloon, pop]);
+  }, [enabled, balloon, pop, intervalSeconds]);
 
   useEffect(() => {
     if (!balloon) return;
@@ -121,15 +131,28 @@ export default function FloatingBalloons() {
 
   return (
     <div className="balloon-layer" aria-live="polite">
-      <button
-        className={'balloon-toggle' + (enabled ? ' on' : '')}
-        type="button"
-        onClick={() => setEnabled(v => !v)}
-        aria-pressed={enabled}
-        title={enabled ? '关闭气球飘飘' : '打开气球飘飘'}
-      >
-        🎈 {enabled ? '气球开' : '气球关'}
-      </button>
+      <div className="balloon-controls">
+        <button
+          className={'balloon-toggle' + (enabled ? ' on' : '')}
+          type="button"
+          onClick={() => setEnabled(v => !v)}
+          aria-pressed={enabled}
+          title={enabled ? '关闭气球飘飘' : '打开气球飘飘'}
+        >
+          🎈 {enabled ? '气球开' : '气球关'}
+        </button>
+        <label className="balloon-interval-control">
+          <span>间隔 {intervalSeconds} 秒</span>
+          <input
+            type="range"
+            min={minIntervalSeconds}
+            max={maxIntervalSeconds}
+            value={intervalSeconds}
+            onChange={event => setIntervalSeconds(clampInterval(Number(event.currentTarget.value)))}
+            aria-label="调整气球出现间隔"
+          />
+        </label>
+      </div>
 
       {enabled && balloon && (
         <button
@@ -171,13 +194,33 @@ function randomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function clampInterval(value: number) {
+  if (!Number.isFinite(value)) return 10;
+  return Math.min(maxIntervalSeconds, Math.max(minIntervalSeconds, Math.round(value)));
+}
+
+function getSpawnDelay(intervalSeconds: number) {
+  const base = intervalSeconds * 1000;
+  const wobble = base * 0.1;
+  return randomInt(Math.round(base - wobble), Math.round(base + wobble));
+}
+
 function pick<T>(items: T[]): T {
   return items[Math.floor(Math.random() * items.length)];
 }
 
 function Illustration({ item }: { item: Moment }) {
   if (item.kind === 'scene') return <Scene scene={item.scene} />;
-  return <Avatar people={item.people} />;
+  return <QuoteAvatar item={item} />;
+}
+
+function QuoteAvatar({ item }: { item: QuoteMoment }) {
+  return (
+    <div className="balloon-quote-moment">
+      <p className="balloon-quote-text">“{item.text}”</p>
+      <Avatar people={item.people} />
+    </div>
+  );
 }
 
 function Avatar({ people }: { people: PeopleKind }) {
@@ -328,19 +371,19 @@ function SceneBackdrop({ scene }: { scene: SceneKind }) {
     case 'hokkaido':
       return <g><path d="M0 110 q60 -55 120 0 t120 0 v60 h-240z" fill="#bde0fe" /><path d="M0 118 q65 -38 120 0 t120 0 v52 h-240z" fill="#ffffff" /><circle cx="198" cy="35" r="15" fill="#ffd43b" /></g>;
     case 'osaka':
-      return <g><rect x="38" y="52" width="58" height="74" rx="8" fill="#f8f9fa" stroke="#6b4f1f" strokeWidth="3" /><path d="M32 57 h70 l-12 -20 h-46z" fill="#ffd97d" stroke="#6b4f1f" strokeWidth="3" /><circle cx="178" cy="72" r="30" fill="#ff6b6b" opacity=".25" /><text x="177" y="80" textAnchor="middle" fontSize="24" fontWeight="900" fill="#c92a2a">大阪</text></g>;
+      return <g><rect x="38" y="52" width="58" height="74" rx="8" fill="#f8f9fa" stroke="#6b4f1f" strokeWidth="3" /><path d="M32 57 h70 l-12 -20 h-46z" fill="#ffd97d" stroke="#6b4f1f" strokeWidth="3" /><circle cx="178" cy="72" r="30" fill="#ff6b6b" opacity=".25" /><circle cx="178" cy="72" r="20" fill="none" stroke="#c92a2a" strokeWidth="4" opacity=".65" /><circle cx="178" cy="72" r="8" fill="#ff8787" opacity=".9" /></g>;
     case 'tokyo':
       return <g><circle cx="190" cy="35" r="15" fill="#ffd43b" /><path d="M55 126 L75 42 L95 126" fill="none" stroke="#e8590c" strokeWidth="7" strokeLinecap="round" /><path d="M45 78 h60 M38 106 h74" stroke="#e8590c" strokeWidth="5" strokeLinecap="round" /><rect x="144" y="78" width="52" height="48" fill="#bde0fe" stroke="#1864ab" strokeWidth="3" /></g>;
     case 'hiking':
       return <g><circle cx="200" cy="35" r="15" fill="#ffd43b" /><path d="M0 126 L62 62 L108 126 Z" fill="#95d5b2" /><path d="M54 70 l10 22 l12 -22" fill="#fff" /><path d="M86 126 L152 52 L220 126 Z" fill="#74c69d" /><path d="M143 62 l13 26 l16 -26" fill="#fff" /></g>;
     case 'english-class':
-      return <g><rect x="32" y="35" width="176" height="82" rx="8" fill="#2b8a3e" /><text x="120" y="72" textAnchor="middle" fontSize="20" fontWeight="900" fill="#fff">English</text><text x="120" y="99" textAnchor="middle" fontSize="16" fill="#d8f3dc">A B C</text></g>;
+      return <g><rect x="32" y="35" width="176" height="82" rx="8" fill="#2b8a3e" /><path d="M62 63 h96 M62 82 h120 M62 101 h74" stroke="#d8f3dc" strokeWidth="5" strokeLinecap="round" opacity=".9" /><circle cx="178" cy="63" r="10" fill="none" stroke="#fff" strokeWidth="3" /><path d="M174 78 l9 0 l-5 10 z" fill="#fff" opacity=".85" /></g>;
     case 'coding-night':
-      return <g><circle cx="202" cy="32" r="13" fill="#ffd43b" /><circle cx="198" cy="28" r="13" fill="#1b263b" /><rect x="44" y="48" width="152" height="82" rx="8" fill="#0b132b" stroke="#74c0fc" strokeWidth="3" /><text x="120" y="82" textAnchor="middle" fontSize="16" fill="#95d5b2">&lt;code /&gt;</text><text x="120" y="106" textAnchor="middle" fontSize="12" fill="#ffd43b">late night</text></g>;
+      return <g><circle cx="202" cy="32" r="13" fill="#ffd43b" /><circle cx="198" cy="28" r="13" fill="#1b263b" /><rect x="44" y="48" width="152" height="82" rx="8" fill="#0b132b" stroke="#74c0fc" strokeWidth="3" /><path d="M78 76 l-18 14 l18 14 M162 76 l18 14 l-18 14 M112 69 l-18 46" stroke="#95d5b2" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round" /><circle cx="130" cy="91" r="5" fill="#ffd43b" /></g>;
     case 'heidegger':
-      return <g><circle cx="198" cy="35" r="13" fill="#ffd43b" /><rect x="58" y="46" width="78" height="90" rx="6" fill="#f8f1e4" stroke="#d6c7a8" strokeWidth="3" /><text x="97" y="82" textAnchor="middle" fontSize="13" fontWeight="900" fill="#3a2c1f">海德格尔</text><text x="97" y="106" textAnchor="middle" fontSize="11" fill="#6b5a43">Being</text></g>;
+      return <g><circle cx="198" cy="35" r="13" fill="#ffd43b" /><rect x="58" y="46" width="78" height="90" rx="6" fill="#f8f1e4" stroke="#d6c7a8" strokeWidth="3" /><path d="M75 70 h44 M75 86 h34 M75 102 h40 M75 118 h28" stroke="#6b5a43" strokeWidth="4" strokeLinecap="round" opacity=".75" /><path d="M67 50 v82" stroke="#d6c7a8" strokeWidth="3" /></g>;
     case 'hiphop':
-      return <g><circle cx="190" cy="37" r="16" fill="#ffd43b" /><path d="M24 126 q40 -52 86 0 t98 0" fill="none" stroke="#b197fc" strokeWidth="8" strokeLinecap="round" /><text x="120" y="62" textAnchor="middle" fontSize="24" fontWeight="900" fill="#d6336c">HIPHOP</text></g>;
+      return <g><circle cx="190" cy="37" r="16" fill="#ffd43b" /><path d="M24 126 q40 -52 86 0 t98 0" fill="none" stroke="#b197fc" strokeWidth="8" strokeLinecap="round" /><circle cx="86" cy="60" r="15" fill="none" stroke="#d6336c" strokeWidth="5" /><circle cx="142" cy="58" r="15" fill="none" stroke="#d6336c" strokeWidth="5" /><path d="M101 60 h26 M86 45 q24 -24 56 -2" stroke="#d6336c" strokeWidth="5" fill="none" strokeLinecap="round" /></g>;
   }
 }
 

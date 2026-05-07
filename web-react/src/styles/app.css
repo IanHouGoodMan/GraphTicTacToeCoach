@@ -315,11 +315,17 @@ body {
   overflow: hidden;
 }
 
-.balloon-toggle {
+.balloon-controls {
   position: fixed;
   right: .75rem;
   bottom: .75rem;
   pointer-events: auto;
+  display: grid;
+  gap: .4rem;
+  justify-items: end;
+}
+
+.balloon-toggle {
   border: 1px solid #f1d9a8;
   border-radius: 999px;
   background: rgba(255, 255, 255, .86);
@@ -332,6 +338,27 @@ body {
 }
 
 .balloon-toggle.on { background: linear-gradient(135deg, #fff3a3, #ffd97d); }
+
+.balloon-interval-control {
+  display: grid;
+  gap: .25rem;
+  width: 10.5rem;
+  padding: .45rem .65rem;
+  border: 1px solid #f1d9a8;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .88);
+  color: #6b4f1f;
+  box-shadow: 0 6px 18px rgba(0,0,0,.1);
+  font-size: .78rem;
+  font-weight: 800;
+  backdrop-filter: blur(8px);
+}
+
+.balloon-interval-control input {
+  width: 100%;
+  accent-color: #ff9a7d;
+  cursor: pointer;
+}
 
 .floating-balloon {
   --balloon-color: #ff7e9f;
@@ -408,6 +435,22 @@ body {
   overflow: hidden;
 }
 
+.balloon-quote-moment {
+  display: grid;
+  gap: .45rem;
+}
+
+.balloon-quote-text {
+  margin: 0;
+  padding: .45rem .6rem;
+  border-radius: 12px;
+  background: #fff3d6;
+  color: #6b4f1f;
+  font-weight: 800;
+  line-height: 1.45;
+  text-align: center;
+}
+
 @keyframes balloon-rise {
   from { bottom: -120px; opacity: .98; }
   92% { opacity: .98; }
@@ -429,7 +472,9 @@ body {
 }
 
 @media (max-width: 640px) {
-  .balloon-toggle { bottom: .55rem; right: .55rem; font-size: .82rem; padding: .38rem .6rem; }
+  .balloon-controls { bottom: .55rem; right: .55rem; }
+  .balloon-toggle { font-size: .82rem; padding: .38rem .6rem; }
+  .balloon-interval-control { width: 9.5rem; font-size: .74rem; padding: .38rem .55rem; }
   .balloon-pop-card { top: 13vh; width: min(16rem, calc(100vw - 1rem)); }
 }
 

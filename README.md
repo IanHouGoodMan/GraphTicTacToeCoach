@@ -1,39 +1,33 @@
-# 井字棋图论教学器 (C# Blazor)
+# 图论小课堂（React + TypeScript）
 
-这是一个面向小学数学融合班的图论教学网页：
-- 把井字棋局面建模为图节点
-- 用 Minimax 给出最优策略
-- 可一键演示双方最优对局（结论为平局）
+这是一个面向孩子的图论学习 Web 应用，当前只保留 React + TypeScript 前端工程。
 
 ## 本地运行
 
 ```bash
-dotnet restore
-dotnet run
+cd web-react
+npm install
+npm run dev
 ```
-
-默认地址通常是：
-- http://localhost:5000
-- https://localhost:5001
 
 ## 构建发布文件
 
 ```bash
-dotnet publish -c Release
+cd web-react
+npm run build
 ```
 
 静态站点输出目录：
-- `bin/Release/net10.0/publish/wwwroot`
+
+- `web-react/dist`
 
 ## 部署到 Azure Static Web Apps
 
-1. 在 Azure 创建 Static Web App 资源。
-2. 将本项目推送到 GitHub 仓库。
-3. 在仓库 Secrets 中添加：
-   - `AZURE_STATIC_WEB_APPS_API_TOKEN`
-4. 确保工作流文件存在：
-   - `.github/workflows/azure-static-web-apps.yml`
-5. 推送到 `main` 分支后自动部署。
+仓库根目录的 `azure.yaml` 指向 `./web-react`，发布产物为 `dist`。
+
+```bash
+azd up
+```
 
 ## 教学结论
 
