@@ -4,7 +4,7 @@ export default function HomePage() {
   return (
     <>
       <section className="hero">
-        <p className="eyebrow">ianhou 爱孩子教学 · React + TypeScript 版</p>
+        <p className="eyebrow">给爱思考的小朋友</p>
         <h1>欢迎来到图论小学堂 ✨</h1>
         <p className="lead">
           这里把数学课里的<strong>图论</strong>变成三个小活动：先看一遍基础知识，
@@ -36,6 +36,22 @@ export default function HomePage() {
           <p>挑一张图，按住起点不松手，沿着边滑到下一个点。iPad、iPhone 用手指或触控笔都可以。</p>
           <p><Link to="/euler">去画画 →</Link></p>
         </article>
+        <article className="card">
+          <h3>🚣 过河问题 · 把生活变成图</h3>
+          <p>3 个大人 + 3 个小朋友，1 条小船，怎么全部过河？把每种状态画成点，每次划船画成边，
+            问题就变成「找一条最短路径」。</p>
+          <p><Link to="/river">去过河 →</Link></p>
+        </article>
+      </section>
+
+      <section className="panel" style={{ marginTop: '1rem' }}>
+        <h2>🔮 这个网站想说的一件事</h2>
+        <p className="lead">
+          很多看起来「需要争论」的问题，其实可以先<strong>把它写下来变成数</strong>，再让数学/算法去算。
+          井字棋的 minimax 把胜负变成 +1 / 0 / −1；过河问题把「状态」变成图上的点；一笔画把「能不能画」
+          变成「奇数度点有几个」。这就是莱布尼茨的那句口号：
+          <em> Calculemus —— 让我们计算吧。</em>
+        </p>
       </section>
     </>
   );

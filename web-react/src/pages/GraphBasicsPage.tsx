@@ -62,7 +62,29 @@ export default function GraphBasicsPage() {
       </section>
 
       <section className="panel">
-        <h2>⑤ 把井字棋变成一张大图 ♟️</h2>
+        <h2>⑤ 有向图、加权图 与 最短路径 🛣️</h2>
+        <p className="lead">
+          前面说的边都是双向的：A 能到 B，B 也能到 A。但是有些关系是<strong>单向</strong>的，比如「A 妈妈是 B」。
+          这种边带个箭头的图，叫做<strong>有向图</strong>。
+        </p>
+        <p className="lead">
+          有时候每条边还要标上「走这条要花多少钱」「走这条要多少分钟」，这叫做<strong>加权图</strong>。
+          下面这张图，标在边上的数字就是「走这条边要花多少分钟」。
+        </p>
+        <WeightedDemo />
+        <ul>
+          <li>从 <strong>家</strong> 走到 <strong>学校</strong>，最快要多少分钟？这就是<strong>最短路径问题</strong>。</li>
+          <li>把每条路想成一段时间，最短路径就是「加起来时间最少的那条」。</li>
+          <li>电脑可以用一个叫 <strong>Dijkstra</strong> 的算法，从起点一层一层往外算，谁先被算到，谁就是最近的。</li>
+        </ul>
+        <p className="proof-note">
+          💡 在 <a href="#/river">过河问题</a> 里也用了这个思路：把每种过河状态看成一个点，每次划船看成一条边，
+          然后问「从开局到大家都过去，最少要划几次船？」 —— 这就是最短路径！
+        </p>
+      </section>
+
+      <section className="panel">
+        <h2>⑥ 把井字棋变成一张大图 ♟️</h2>
         <p className="lead">
           每一种棋盘的样子（局面）都可以看成一个<strong>点</strong>，每走一步棋就是从一个点走到另一个点的<strong>边</strong>。
           这样井字棋整盘游戏就变成了一棵<strong>巨大的树</strong>：根是空棋盘，往下分叉很多很多次。
@@ -85,6 +107,9 @@ export default function GraphBasicsPage() {
           <dt>连通（connected）</dt><dd>任意两个点之间都能走通。</dd>
           <dt>树（tree）</dt><dd>连通的、没有圈圈的图。</dd>
           <dt>搜索算法</dt><dd>把可能的情况一个一个看过去，挑最好的。井字棋里的 minimax 就是。</dd>
+          <dt>有向图</dt><dd>边带箭头，只能照着箭头走的图。</dd>
+          <dt>加权图</dt><dd>每条边上写着一个数字（比如时间、距离），走过去要花这么多。</dd>
+          <dt>最短路径</dt><dd>从一个点走到另一个点，「加起来最小」的那条路。</dd>
         </dl>
       </section>
     </>
@@ -180,5 +205,64 @@ function TreeDemo() {
         </g>
       ))}
     </svg>
+  );
+}
+
+function WeightedDemo() {
+  // 家 → ... → 学校：演示有向 + 加权 + 最短路径
+  const N = [
+    { x: 50,  y: 130, label: '家',   color: '#1864ab' },
+    { x: 180, y: 50,  label: '公园', color: '#3a2c1f' },
+    { x: 180, y: 210, label: '便利店', color: '#3a2c1f' },
+    { x: 320, y: 130, label: '学校', color: '#b46a1a' }
+  ];
+  // [from, to, weight, isShortest]
+  const E: [number, number, number, boolean][] = [
+    [0, 1, 7, false],
+    [0, 2, 4, true],
+    [1, 3, 3, false],
+    [2, 3, 5, true],
+    [1, 2, 2, false]
+  ];
+  const arrow = (x1: number, y1: number, x2: number, y2: number) => {
+    const dx = x2 - x1, dy = y2 - y1;
+    const len = Math.hypot(dx, dy);
+    const ux = dx / len, uy = dy / len;
+    const ex = x2 - ux * 24, ey = y2 - uy * 24;
+    const px = -uy, py = ux;
+    const a1x = ex - ux * 8 + px * 5, a1y = ey - uy * 8 + py * 5;
+    const a2x = ex - ux * 8 - px * 5, a2y = ey - uy * 8 - py * 5;
+    return { ex, ey, points: `${ex},${ey} ${a1x},${a1y} ${a2x},${a2y}` };
+  };
+  return (
+    <div>
+      <svg viewBox="0 0 380 260" style={{ width: '100%', maxWidth: 520 }}>
+        {E.map(([a, b, w, hi], i) => {
+          const A = N[a], B = N[b];
+          const ar = arrow(A.x, A.y, B.x, B.y);
+          const stroke = hi ? '#2b8a3e' : '#6b5a43';
+          const sw = hi ? 4 : 2.5;
+          const mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2;
+          return (
+            <g key={i}>
+              <line x1={A.x} y1={A.y} x2={ar.ex} y2={ar.ey} stroke={stroke} strokeWidth={sw} opacity={0.85} />
+              <polygon points={ar.points} fill={stroke} />
+              <circle cx={mx} cy={my} r={10} fill="#fffaf0" stroke={stroke} />
+              <text x={mx} y={my + 4} textAnchor="middle" fontSize={11} fontWeight={700} fill={stroke}>{w}</text>
+            </g>
+          );
+        })}
+        {N.map((n, i) => (
+          <g key={i}>
+            <circle cx={n.x} cy={n.y} r={22} fill="#fff3d6" stroke={n.color} strokeWidth={2.5} />
+            <text x={n.x} y={n.y + 4} textAnchor="middle" fontSize={12} fontWeight={700} fill={n.color}>{n.label}</text>
+          </g>
+        ))}
+      </svg>
+      <p className="proof-note" style={{ marginTop: '.4rem' }}>
+        从家走到学校，<strong>家 → 便利店 → 学校 = 4 + 5 = 9 分钟</strong>，比经过公园的路（7 + 3 = 10 分钟）更快。
+        所以绿色那条就是最短路径。
+      </p>
+    </div>
   );
 }

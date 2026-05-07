@@ -96,6 +96,27 @@ export default function MoveCorridor({ board: _board, history, firstPlayer = 'X'
         )}
       </div>
 
+      <details className="corridor-formula">
+        <summary>这个数字是怎么算的？📐 点开看公式</summary>
+        <p>
+          每个棋盘看成图里的一个 <strong>点</strong>。从这个点出发能展开多少个「未来对局」，
+          就是把所有合法走法的子局面分别再展开，加起来：
+        </p>
+        <p className="corridor-formula-eq">
+          N(局面) = Σ N(下一个局面) ，把所有「能下的格子」加起来；
+          <br/>遇到分出胜负或下满 9 格，就 N = 1（这一支已经结束）。
+        </p>
+        <p>
+          举个小例子：第 1 步有 9 个空格可以选 → 接下来对手有 8 个空格可以选 → … 一直展到底，最多 9!&nbsp;=&nbsp;362,880 条「走步顺序」。
+          因为有些棋下到一半就分出胜负，<strong>真正的对局总数 N(空棋盘) ≈ 255,168</strong>。
+          每走一步，剩下的「未来对局」就立刻变小，这就是「<strong>未来在收缩</strong>」的数学含义。
+        </p>
+        <p className="proof-note" style={{ marginTop: '.4rem' }}>
+          💡 网站里这个数字是网页加载后真的递归算出来的（用了「记忆化」加速：相同的局面只算一次）。
+          数学家把这种从下往上算的方法叫<strong>动态规划</strong>，minimax 也是用同一个思路。
+        </p>
+      </details>
+
       <div className="corridor-track">
         <div className="corridor-step start">
           <div className="corridor-label">开局</div>

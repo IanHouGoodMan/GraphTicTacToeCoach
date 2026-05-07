@@ -12,7 +12,9 @@ const PUZZLES = buildPuzzles();
 const STAGE_W = 360;
 const STAGE_H = 300;
 const VERTEX_R = 16;
-const SNAP_R = 26; // 触屏吸附半径
+const HIT_R = 34;          // 透明热区半径，把可点击范围放大
+const SNAP_R = 40;         // 拖动时手指吸附到顶点的半径
+const TAP_MAX_MOVE = 14;   // 视为「点击」而不是「拖动」的最大位移（SVG 坐标）
 
 export default function EulerPracticePage() {
   const [puzzleId, setPuzzleId] = useState(PUZZLES[0].id);
@@ -27,6 +29,19 @@ export default function EulerPracticePage() {
 
   const svgRef = useRef<SVGSVGElement | null>(null);
   const dragging = useRef(false);
+  const pointerStart = useRef<{ x: number; y: number } | null>(null);
+  const pointerStartVertex = useRef<number>(-1);
+  const movedFar = useRef(false);
+  const activePointerId = useRef<number | null>(null);
+  // Refs that mirror state so imperative touch handlers always get fresh values
+  const pathRef = useRef<number[]>([]);
+  const usedRef = useRef<Set<number>>(new Set());
+  // Updated every render so touch handlers always call the latest closures
+  const handlersRef = useRef<{
+    startAt: (v: number) => void;
+    tryAdvanceTo: (v: number, from?: number, usedOverride?: Set<number>) => void;
+    nearestVertex: (p: { x: number; y: number }, radius?: number) => number;
+  }>(null!);
 
   const verdict = useMemo(() => analyse(puzzle), [puzzle]);
   const odd = useMemo(() => oddVertices(puzzle), [puzzle]);
@@ -35,8 +50,81 @@ export default function EulerPracticePage() {
   const finished = used.size === totalEdges && totalEdges > 0;
 
   useEffect(() => {
+    pathRef.current = [];
+    usedRef.current = new Set();
     setPath([]); setUsed(new Set()); setGuess(null); setMessage(null);
   }, [puzzleId]);
+
+  // Register non-passive touch listeners for iOS Safari.
+  // React synthetic touch events are passive (can't preventDefault), so iOS ignores them.
+  // We register once and delegate to handlersRef so handlers always have fresh closures.
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    const coord = (t: Touch): { x: number; y: number } => {
+      const r = svg.getBoundingClientRect();
+      return { x: (t.clientX - r.left) * STAGE_W / r.width, y: (t.clientY - r.top) * STAGE_H / r.height };
+    };
+    const onStart = (e: TouchEvent) => {
+      e.preventDefault(); // must be non-passive to work on iOS
+      const p = coord(e.changedTouches[0]);
+      pointerStart.current = p;
+      pointerStartVertex.current = handlersRef.current.nearestVertex(p, HIT_R);
+      movedFar.current = false;
+      dragging.current = true;
+      setPointerXY(p);
+    };
+    const onMove = (e: TouchEvent) => {
+      e.preventDefault();
+      if (!dragging.current) return;
+      const p = coord(e.changedTouches[0]);
+      setPointerXY(p);
+      if (pointerStart.current) {
+        if (Math.hypot(p.x - pointerStart.current.x, p.y - pointerStart.current.y) > TAP_MAX_MOVE)
+          movedFar.current = true;
+      }
+      if (!movedFar.current) return;
+      const v = handlersRef.current.nearestVertex(p);
+      if (v < 0) return;
+      if (pathRef.current.length === 0) {
+        const start = pointerStartVertex.current >= 0 ? pointerStartVertex.current : v;
+        handlersRef.current.startAt(start);
+        if (v !== start) handlersRef.current.tryAdvanceTo(v, start, new Set());
+      } else {
+        const last = pathRef.current[pathRef.current.length - 1];
+        if (v !== last) handlersRef.current.tryAdvanceTo(v);
+      }
+    };
+    const onEnd = (e: TouchEvent) => {
+      e.preventDefault();
+      const wasDragging = dragging.current;
+      dragging.current = false;
+      setPointerXY(null);
+      if (!wasDragging) return;
+      if (!movedFar.current) {
+        // Treat as tap: advance to nearest vertex
+        const p = coord(e.changedTouches[0]);
+        const v = handlersRef.current.nearestVertex(p, HIT_R);
+        if (v >= 0) {
+          if (pathRef.current.length === 0) handlersRef.current.startAt(v);
+          else handlersRef.current.tryAdvanceTo(v);
+        }
+      }
+      pointerStart.current = null;
+      pointerStartVertex.current = -1;
+      movedFar.current = false;
+    };
+    svg.addEventListener('touchstart', onStart, { passive: false });
+    svg.addEventListener('touchmove',  onMove,  { passive: false });
+    svg.addEventListener('touchend',   onEnd,   { passive: false });
+    svg.addEventListener('touchcancel',onEnd,   { passive: false });
+    return () => {
+      svg.removeEventListener('touchstart', onStart);
+      svg.removeEventListener('touchmove',  onMove);
+      svg.removeEventListener('touchend',   onEnd);
+      svg.removeEventListener('touchcancel',onEnd);
+    };
+  }, []); // register once; state accessed via refs
 
   function svgPoint(e: React.PointerEvent): { x: number; y: number } | null {
     const svg = svgRef.current;
@@ -47,80 +135,133 @@ export default function EulerPracticePage() {
     return { x: (e.clientX - r.left) * sx, y: (e.clientY - r.top) * sy };
   }
 
-  function nearestVertex(p: { x: number; y: number }): number {
+  function nearestVertex(p: { x: number; y: number }, radius: number = SNAP_R): number {
     let best = -1, bd = Infinity;
     for (let i = 0; i < puzzle.vertices.length; i++) {
       const v = puzzle.vertices[i];
       const d = Math.hypot(v.x - p.x, v.y - p.y);
       if (d < bd) { bd = d; best = i; }
     }
-    return bd <= SNAP_R ? best : -1;
+    return bd <= radius ? best : -1;
   }
 
   function startAt(v: number) {
-    setPath([v]);
+    const newPath = [v];
+    pathRef.current = newPath;   // sync ref immediately for imperative handlers
+    usedRef.current = new Set();
+    setPath(newPath);
     setUsed(new Set());
     setGuess(null);
-    setMessage(null);
+    if (odd.length === 2 && !odd.includes(v)) {
+      setMessage({
+        kind: 'info',
+        text: '提示：这个图有 2 个奇数度的点（粉色边框）。如果想一次画完，应从其中一个奇点出发、到另一个奇点结束。当然你也可以先自由探索，看看从偶点开始会在哪里卡住～'
+      });
+    } else {
+      setMessage(null);
+    }
   }
 
-  function tryAdvanceTo(v: number) {
-    if (path.length === 0) { startAt(v); return; }
-    const last = path[path.length - 1];
+  function tryAdvanceTo(v: number, fromVertex?: number, usedOverride?: Set<number>) {
+    if (pathRef.current.length === 0 && fromVertex === undefined) { startAt(v); return; }
+    const last = fromVertex ?? pathRef.current[pathRef.current.length - 1];
     if (v === last) return;
-    const ei = findEdgeIndex(puzzle, last, v, used);
+    const baseUsed = usedOverride ?? usedRef.current;
+    const ei = findEdgeIndex(puzzle, last, v, baseUsed);
     if (ei < 0) {
       setMessage({ kind: 'bad', text: '这条边走不了：可能两个点之间没有边，或者那条边已经画过了。' });
       return;
     }
-    const newUsed = new Set(used); newUsed.add(ei);
+    const newUsed = new Set(baseUsed); newUsed.add(ei);
+    const newPath = fromVertex === undefined ? [...pathRef.current, v] : [fromVertex, v];
+    pathRef.current = newPath;   // sync ref immediately
+    usedRef.current = newUsed;
     setUsed(newUsed);
-    setPath([...path, v]);
+    setPath(newPath);
     setMessage(null);
   }
 
   function onPointerDown(e: React.PointerEvent) {
+    if (e.pointerType === 'touch') return; // iOS touch handled imperatively above
     e.preventDefault();
-    (e.target as Element).setPointerCapture?.(e.pointerId);
+    svgRef.current?.setPointerCapture?.(e.pointerId);
+    activePointerId.current = e.pointerId;
     const p = svgPoint(e); if (!p) return;
-    setPointerXY(p);
-    const v = nearestVertex(p);
+    pointerStart.current = p;
+    pointerStartVertex.current = nearestVertex(p, HIT_R);
+    movedFar.current = false;
     dragging.current = true;
-    if (v >= 0) {
-      if (path.length === 0) startAt(v);
-      else tryAdvanceTo(v);
-    }
+    setPointerXY(p);
+    // 注意：点击模式等 pointerup 决定；拖动模式会优先使用这里记录的起点。
   }
   function onPointerMove(e: React.PointerEvent) {
+    if (e.pointerType === 'touch') return;
     if (!dragging.current) return;
     const p = svgPoint(e); if (!p) return;
     setPointerXY(p);
+    if (pointerStart.current) {
+      const d = Math.hypot(p.x - pointerStart.current.x, p.y - pointerStart.current.y);
+      if (d > TAP_MAX_MOVE) movedFar.current = true;
+    }
+    if (!movedFar.current) return; // 还在「点击」判定区，不做事
     const v = nearestVertex(p);
     if (v >= 0) {
+      if (path.length === 0) {
+        const start = pointerStartVertex.current >= 0 ? pointerStartVertex.current : v;
+        startAt(start);
+        if (v !== start) tryAdvanceTo(v, start, new Set());
+        return;
+      }
       const last = path[path.length - 1];
       if (v !== last) tryAdvanceTo(v);
     }
   }
-  function onPointerUp() {
+  function onPointerUp(e: React.PointerEvent) {
+    if (e.pointerType === 'touch') return;
+    const wasDragging = dragging.current;
     dragging.current = false;
     setPointerXY(null);
+    if (activePointerId.current !== null) {
+      try { svgRef.current?.releasePointerCapture?.(activePointerId.current); } catch { /* ignore */ }
+      activePointerId.current = null;
+    }
+    if (!wasDragging) return;
+    if (!movedFar.current) {
+      // 「轻点」：当作 tap 处理，吸附到最近顶点
+      const p = svgPoint(e); if (p) {
+        const v = nearestVertex(p, HIT_R);
+        if (v >= 0) {
+          if (path.length === 0) startAt(v);
+          else tryAdvanceTo(v);
+        }
+      }
+    }
+    pointerStart.current = null;
+    pointerStartVertex.current = -1;
+    movedFar.current = false;
   }
 
   function undo() {
-    if (path.length <= 1) { setPath([]); setUsed(new Set()); return; }
-    const newPath = path.slice(0, -1);
-    const a = path[path.length - 2];
-    const b = path[path.length - 1];
-    const newUsed = new Set(used);
-    // 删除最后一条用过的、连接 a-b 的边
+    if (pathRef.current.length <= 1) {
+      pathRef.current = []; usedRef.current = new Set();
+      setPath([]); setUsed(new Set()); return;
+    }
+    const newPath = pathRef.current.slice(0, -1);
+    const a = pathRef.current[pathRef.current.length - 2];
+    const b = pathRef.current[pathRef.current.length - 1];
+    const newUsed = new Set(usedRef.current);
     for (const i of Array.from(newUsed).reverse()) {
       const e = puzzle.edges[i];
       if ((e.a === a && e.b === b) || (e.a === b && e.b === a)) { newUsed.delete(i); break; }
     }
+    pathRef.current = newPath; usedRef.current = newUsed;
     setPath(newPath); setUsed(newUsed); setMessage(null);
   }
 
-  function clearPath() { setPath([]); setUsed(new Set()); setMessage(null); }
+  function clearPath() {
+    pathRef.current = []; usedRef.current = new Set();
+    setPath([]); setUsed(new Set()); setMessage(null);
+  }
 
   function submitGuess(g: boolean) {
     setGuess(g);
@@ -132,17 +273,25 @@ export default function EulerPracticePage() {
     });
   }
 
+  // Keep handlersRef current on every render so imperative touch listeners always call fresh closures
+  handlersRef.current = { startAt, tryAdvanceTo, nearestVertex };
+
   // 已用过的边（用于 hover 状态显示）
   const usedEdgeSet = used;
 
   return (
     <>
       <section className="hero">
-        <p className="eyebrow">React + TypeScript · 触屏友好</p>
-        <h1>一笔画 · 用手指画画 ✏️</h1>
+        <p className="eyebrow">触屏友好 · iPad / iPhone</p>
+        <h1>一笔画 · 手指画画 ✏️</h1>
         <p className="lead">
-          按住一个点，<strong>不要松手</strong>，沿着线滑到下一个点。每条边只能画一次，
-          画完所有边就成功啦！可以挑题、撤回、清空，也可以猜一下「能不能一笔画」。
+          有两种玩法：① <strong>点一下起点</strong>，再点下一个点，一格一格走；
+          ② 也可以<strong>按住起点滑动</strong>，沿着线一气呵成。每条边只能画一次，
+          画完所有边就成功啦！
+        </p>
+        <p className="lead" style={{ marginTop: '.4rem' }}>
+          💡 <strong>起点很重要</strong>：如果图里有 2 个奇数度的点（<span style={{color:'#a61e4d',fontWeight:700}}>粉色边框</span>），
+          必须<strong>从奇点出发</strong>，否则走几步就会卡住～例如「房子」要从屋檐边上的点开始。
         </p>
       </section>
 
@@ -168,11 +317,11 @@ export default function EulerPracticePage() {
           <svg
             ref={svgRef}
             viewBox={`0 0 ${STAGE_W} ${STAGE_H}`}
+            style={{ touchAction: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
             onPointerCancel={onPointerUp}
-            onPointerLeave={onPointerUp}
           >
             {/* 边 */}
             {puzzle.edges.map((e, i) => {
@@ -222,21 +371,26 @@ export default function EulerPracticePage() {
               const isCurrent = path.length > 0 && path[path.length - 1] === i;
               return (
                 <g key={i}>
+                  {/* 透明大热区，方便手指点击 */}
+                  <circle cx={v.x} cy={v.y} r={HIT_R} fill="transparent" />
                   <circle
                     cx={v.x} cy={v.y} r={VERTEX_R}
                     fill={isCurrent ? '#ffd97d' : (isOdd && showHints ? '#ffe3ec' : '#fffaf0')}
                     stroke={isOdd && showHints ? '#a61e4d' : '#3a2c1f'}
                     strokeWidth={isOdd && showHints ? 3 : 2}
+                    pointerEvents="none"
                   />
                   {showHints && (
                     <text x={v.x} y={v.y + 4} textAnchor="middle"
                           fontSize="13" fontWeight="700"
+                          pointerEvents="none"
                           fill={isOdd ? '#a61e4d' : '#3a2c1f'}>
                       {deg[i]}
                     </text>
                   )}
                   {v.label && (
                     <text x={v.x} y={v.y - VERTEX_R - 6} textAnchor="middle"
+                          pointerEvents="none"
                           fontSize="12" fill="#6b4f1f">{v.label}</text>
                   )}
                 </g>
@@ -262,7 +416,7 @@ export default function EulerPracticePage() {
         </div>
 
         {message && (
-          <div className={`guess-result ${message.kind === 'good' ? 'good' : message.kind === 'bad' ? 'bad' : ''}`}>
+          <div className={`guess-result ${message.kind === 'good' ? 'good' : message.kind === 'bad' ? 'bad' : 'info'}`}>
             {message.text}
           </div>
         )}

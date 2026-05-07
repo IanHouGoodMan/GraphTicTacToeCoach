@@ -1,4 +1,4 @@
-# ianhou 爱孩子教学 · 图论小学堂 — React + TypeScript 前端
+# 图论小课堂 — React + TypeScript 前端
 
 面向小学三年级（适当前瞻）的图论学习 Web 应用。
 
@@ -29,7 +29,9 @@ npm run build
 
 ## 部署到 Azure Static Web Apps
 
-目标网站名建议使用：`ianhou-teaching-love-kids-graph`。
+站内产品名保持为：`图论小课堂`。
+
+如果希望网址中包含 `ianhou`、`图论/graph`、`teaching/教学`、`love-kids/爱小朋友`，应通过 **Azure Static Web Apps 自定义域名** 来实现，而不是把这些字样放进首页标题。
 
 仓库根目录包含 `azure.yaml` 和 `infra/main.bicep`，配置为**只发布 React + TypeScript 项目**：
 
