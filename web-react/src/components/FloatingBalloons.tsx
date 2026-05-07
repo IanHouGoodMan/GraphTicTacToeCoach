@@ -185,8 +185,8 @@ function Avatar({ people }: { people: PeopleKind }) {
     return (
       <svg className="balloon-pop-art" viewBox="0 0 240 170" role="img" aria-label="家庭卡通头像">
         <rect width="240" height="170" rx="22" fill="#fff3d6" />
-        <SinglePerson x={78} y={90} skin="#ffd8b5" hair="#3a2c1f" shirt="#dbeafe" kind="mom" />
-        <SinglePerson x={162} y={90} skin="#ffd8b5" hair="#2b2118" shirt="#fde2e4" kind="sister" />
+        <SinglePerson x={78} y={90} skin="#ffd8b5" hair="#2f241c" shirt="#212529" kind="mom" />
+        <SinglePerson x={162} y={90} skin="#ffd8b5" hair="#3a2418" shirt="#f8f9fa" kind="sister" />
       </svg>
     );
   }
@@ -198,8 +198,8 @@ function Avatar({ people }: { people: PeopleKind }) {
         x={120}
         y={88}
         skin="#ffd8b5"
-        hair={people === 'dad' ? '#2f2620' : '#3a2c1f'}
-        shirt={people === 'dad' ? '#6c757d' : people === 'mom' ? '#b7e4c7' : people === 'sister' ? '#ffd6e0' : '#ffd97d'}
+        hair={people === 'dad' ? '#1f1a17' : people === 'sister' ? '#3a2418' : '#2f241c'}
+        shirt={people === 'dad' ? '#f8f9fa' : people === 'mom' ? '#212529' : people === 'sister' ? '#f8f9fa' : '#f7e6d0'}
         kind={people}
       />
     </svg>
@@ -207,29 +207,87 @@ function Avatar({ people }: { people: PeopleKind }) {
 }
 
 function SinglePerson({ x, y, skin, hair, shirt, kind }: { x: number; y: number; skin: string; hair: string; shirt: string; kind: PeopleKind }) {
-  const faceWidth = kind === 'dad' || kind === 'sister' ? 48 : 42;
+  const faceWidth = kind === 'dad' ? 50 : kind === 'sister' ? 46 : 42;
   return (
     <g>
       {kind === 'little' && (
         <>
-          <circle cx={x - 38} cy={y - 14} r="17" fill={hair} />
-          <circle cx={x + 38} cy={y - 14} r="17" fill={hair} />
-          <path d={`M${x - 54} ${y - 12} q-12 18 2 30`} stroke="#d6336c" strokeWidth="4" fill="none" strokeLinecap="round" />
-          <path d={`M${x + 54} ${y - 12} q12 18 -2 30`} stroke="#d6336c" strokeWidth="4" fill="none" strokeLinecap="round" />
+          <ellipse cx={x - 36} cy={y - 13} rx="15" ry="22" fill={hair} />
+          <ellipse cx={x + 36} cy={y - 13} rx="15" ry="22" fill={hair} />
+          <path d={`M${x - 47} ${y - 5} q-15 22 1 36`} stroke={hair} strokeWidth="8" fill="none" strokeLinecap="round" />
+          <path d={`M${x + 47} ${y - 5} q15 22 -1 36`} stroke={hair} strokeWidth="8" fill="none" strokeLinecap="round" />
+          <circle cx={x - 47} cy={y - 4} r="4" fill="#ff7e9f" />
+          <circle cx={x + 47} cy={y - 4} r="4" fill="#ff7e9f" />
         </>
       )}
-      {kind === 'sister' && <ellipse cx={x + 35} cy={y - 22} rx="18" ry="26" fill={hair} />}
+      {kind === 'sister' && (
+        <>
+          <ellipse cx={x + 34} cy={y - 24} rx="16" ry="27" fill={hair} />
+          <path d={`M${x + 44} ${y - 28} q17 -10 27 1`} stroke={hair} strokeWidth="4" fill="none" strokeLinecap="round" />
+          <circle cx={x + 25} cy={y - 29} r="4" fill="#adb5bd" />
+        </>
+      )}
+      {kind === 'mom' && (
+        <>
+          <ellipse cx={x + 31} cy={y - 18} rx="14" ry="27" fill={hair} />
+          <path d={`M${x + 39} ${y - 25} q16 -8 26 4`} stroke={hair} strokeWidth="4" fill="none" strokeLinecap="round" />
+          <circle cx={x + 22} cy={y - 29} r="4" fill="#74c0fc" />
+        </>
+      )}
       <path d={`M${x - 48} ${y + 58} q48 -45 96 0 v20 h-96z`} fill={shirt} />
+      {kind === 'little' && (
+        <g opacity=".9" stroke="#c7a17a" strokeWidth="1.5">
+          <path d={`M${x - 32} ${y + 43} v35 M${x} ${y + 35} v43 M${x + 32} ${y + 43} v35`} />
+          <path d={`M${x - 44} ${y + 56} h88 M${x - 46} ${y + 69} h92`} />
+        </g>
+      )}
+      {kind === 'mom' && (
+        <g>
+          <rect x={x - 45} y={y + 39} width="30" height="22" rx="3" fill="#ffe8a3" stroke="#6b4f1f" strokeWidth="2" />
+          <path d={`M${x - 40} ${y + 47} h20 M${x - 40} ${y + 54} h15`} stroke="#6b4f1f" strokeWidth="1.7" strokeLinecap="round" />
+          <path d={`M${x + 31} ${y + 39} l22 -14`} stroke="#6b4f1f" strokeWidth="3" strokeLinecap="round" />
+        </g>
+      )}
+      {kind === 'sister' && (
+        <g>
+          <path d={`M${x - 42} ${y + 45} q13 -9 26 0 v27 h-26z`} fill="#74c0fc" opacity=".9" />
+          <path d={`M${x - 36} ${y + 42} q-8 11 -7 29`} stroke="#495057" strokeWidth="3" fill="none" strokeLinecap="round" />
+          <rect x={x + 19} y={y + 43} width="24" height="18" rx="3" fill="#dbeafe" stroke="#1864ab" strokeWidth="2" />
+          <path d={`M${x + 23} ${y + 51} h16`} stroke="#1864ab" strokeWidth="1.8" strokeLinecap="round" />
+        </g>
+      )}
       <ellipse cx={x} cy={y - 22} rx={faceWidth / 2 + 7} ry="31" fill={hair} />
-      {kind === 'dad' && <rect x={x - 30} y={y - 54} width="60" height="25" rx="12" fill={hair} />}
+      {kind === 'dad' && (
+        <>
+          <rect x={x - 31} y={y - 55} width="62" height="25" rx="12" fill={hair} />
+          <path d={`M${x - 29} ${y - 43} q29 -18 58 0`} stroke="#0f0d0b" strokeWidth="5" fill="none" strokeLinecap="round" />
+        </>
+      )}
       <ellipse cx={x} cy={y - 16} rx={faceWidth / 2} ry="31" fill={skin} />
-      {kind === 'mom' && <path d={`M${x - 27} ${y - 38} q27 -30 54 0 q-18 -10 -54 0`} fill={hair} />}
-      {kind === 'little' && <path d={`M${x - 28} ${y - 39} q28 -27 56 0 q-20 -10 -56 0`} fill={hair} />}
-      {kind === 'sister' && <path d={`M${x - 32} ${y - 43} q34 -24 66 8 q-18 -8 -66 -8`} fill={hair} />}
+      {kind === 'mom' && (
+        <>
+          <path d={`M${x - 27} ${y - 38} q27 -28 54 0 q-18 -10 -54 0`} fill={hair} />
+          <path d={`M${x - 15} ${y - 43} q5 18 -4 29 M${x - 3} ${y - 45} q4 17 -4 28 M${x + 9} ${y - 43} q2 16 -5 27`} stroke={hair} strokeWidth="3" fill="none" strokeLinecap="round" />
+        </>
+      )}
+      {kind === 'little' && (
+        <>
+          <path d={`M${x - 28} ${y - 39} q28 -27 56 0 q-20 -10 -56 0`} fill={hair} />
+          <path d={`M${x - 17} ${y - 42} q8 18 -3 30 M${x - 2} ${y - 44} q5 17 -5 30 M${x + 12} ${y - 41} q3 15 -5 27`} stroke={hair} strokeWidth="3" fill="none" strokeLinecap="round" />
+        </>
+      )}
+      {kind === 'sister' && (
+        <>
+          <path d={`M${x - 32} ${y - 43} q34 -24 66 8 q-18 -8 -66 -8`} fill={hair} />
+          <path d={`M${x - 18} ${y - 45} q6 19 -4 31 M${x - 4} ${y - 47} q5 18 -4 31 M${x + 10} ${y - 44} q4 17 -5 29`} stroke={hair} strokeWidth="3" fill="none" strokeLinecap="round" />
+        </>
+      )}
       {(kind === 'dad' || kind === 'sister') && <Glasses x={x} y={y - 15} />}
       <circle cx={x - 11} cy={y - 17} r="2.4" fill="#2f2620" />
       <circle cx={x + 11} cy={y - 17} r="2.4" fill="#2f2620" />
+      {kind === 'dad' && <path d={`M${x - 12} ${y - 26} q7 -4 14 0 M${x + 10} ${y - 26} q7 -4 14 0`} stroke="#2f2620" strokeWidth="2" fill="none" strokeLinecap="round" />}
       <path d={`M${x - 10} ${y + 2} q10 9 20 0`} stroke="#a14c00" strokeWidth="3" fill="none" strokeLinecap="round" />
+      {kind === 'sister' && <circle cx={x + 18} cy={y + 13} r="1.8" fill="#5c2b16" />}
       {kind === 'mom' && <path d={`M${x - 33} ${y - 20} q-8 35 9 57`} stroke={hair} strokeWidth="8" fill="none" strokeLinecap="round" />}
     </g>
   );
@@ -237,10 +295,11 @@ function SinglePerson({ x, y, skin, hair, shirt, kind }: { x: number; y: number;
 
 function Glasses({ x, y }: { x: number; y: number }) {
   return (
-    <g fill="none" stroke="#343a40" strokeWidth="2.2">
-      <circle cx={x - 12} cy={y} r="8" />
-      <circle cx={x + 12} cy={y} r="8" />
-      <path d={`M${x - 4} ${y} h8`} />
+    <g fill="none" stroke="#343a40" strokeWidth="2">
+      <circle cx={x - 12} cy={y} r="8.5" />
+      <circle cx={x + 12} cy={y} r="8.5" />
+      <path d={`M${x - 3.5} ${y} h7`} />
+      <path d={`M${x - 20.5} ${y - 1} h-8 M${x + 20.5} ${y - 1} h8`} strokeLinecap="round" />
     </g>
   );
 }
