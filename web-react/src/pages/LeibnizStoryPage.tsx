@@ -5,11 +5,11 @@ export default function LeibnizStoryPage() {
     <>
       <section className="hero">
         <p className="eyebrow">历史故事 · 把争论变成计算</p>
-        <h1>莱布尼茨的 “Calculemus!” 是什么意思？</h1>
+        <h1>Calculemus!<br />中文：让我们来计算吧。<br />English: Let us calculate.</h1>
         <p className="lead">
-          这不是一句适合当成“逐字中文名言”的话，而是莱布尼茨一个真实、重要的梦想：
-          如果我们能把概念、规则和推理写成足够清楚的符号，那么许多争论就不必只靠吵，
-          可以像算术一样一步一步检查。
+          这三个探索题本来都不是算术题：一笔画像画画，井字棋像游戏，过河问题像故事。
+          但借助<strong>图论</strong>，我们可以先把它们变成<strong>点、边、状态、路径</strong>，
+          再让规则和计算发挥作用。不是直接算，而是<strong>先建模，才变得可计算</strong>。
         </p>
       </section>
 

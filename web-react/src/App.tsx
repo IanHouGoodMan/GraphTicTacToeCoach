@@ -21,7 +21,7 @@ export default function App() {
   return (
     <div className="app-shell">
       <div className="leibniz-banner" title="莱布尼茨的梦想：把推理变成计算">
-        “<em>Calculemus!</em> / Let us calculate.” · 莱布尼茨的理想：把争论写清楚，再按规则计算。
+        <em>Calculemus!</em> 中文：让我们来计算吧。English: Let us calculate. · 用图论先建模，才让问题变得可计算。
         <NavLink to="/leibniz"> 看历史故事 →</NavLink>
       </div>
       <header className="topbar">
