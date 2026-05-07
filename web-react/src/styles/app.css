@@ -233,6 +233,16 @@ body {
 }
 .proof-note { color: #6b5a43; background: #f7f3e8; border-radius: 12px; padding: .65rem .8rem; }
 .check-list { line-height: 1.7; }
+.proof-svg { width: 100%; max-width: 430px; display: block; margin: .55rem auto; background: #fff; border: 1px solid #f1d9a8; border-radius: 14px; }
+.proof-mini-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .55rem; margin: .55rem 0; }
+.proof-mini-card { background: #fff; border: 1px solid #f1d9a8; border-radius: 12px; padding: .7rem; text-align: center; line-height: 1.55; }
+.minimax-sketch { background: #fff; border: 1px solid #f1d9a8; border-radius: 14px; padding: .7rem; margin: .55rem 0; text-align: center; }
+.score-row { display: flex; justify-content: center; flex-wrap: wrap; gap: .45rem; }
+.score { display: inline-flex; min-width: 54px; justify-content: center; padding: .25rem .55rem; border-radius: 999px; font-weight: 800; }
+.score.win { background: #ffe3ec; color: #a61e4d; }
+.score.draw { background: #eef2f6; color: #495057; }
+.score.lose { background: #e7f5ff; color: #1864ab; }
+.score-arrow { color: #8a6a3a; font-weight: 700; margin: .45rem 0; }
 
 /* ===== Leibniz banner ===== */
 .leibniz-banner { background: linear-gradient(90deg,#fff3a3,#ffd97d); color:#5b3a00; text-align:center; padding:.5rem .8rem; font-size:.92rem; font-weight:600; border-bottom:1px solid #e0b870; }
@@ -246,10 +256,25 @@ body {
 .story-grid { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
 .story-card { background:#fff; border:1px solid #f1d9a8; border-radius:14px; padding:.9rem; }
 .story-card h3 { margin-top:0; color:#6b4f1f; }
+.timeline { position: relative; display: grid; gap: .8rem; margin-top: .8rem; }
+.timeline::before { content:''; position:absolute; left:28px; top:0; bottom:0; width:3px; background:#f1d9a8; border-radius:999px; }
+.timeline-item { position: relative; display:grid; grid-template-columns:56px 1fr; gap:.75rem; background:#fff; border:1px solid #f1d9a8; border-radius:16px; padding:.75rem; }
+.timeline-avatar { width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#fff3d6; border:2px solid #d6c7a8; font-size:1.6rem; z-index:1; }
+.timeline-year { margin:.05rem 0; color:#b46a1a; font-weight:900; }
+.timeline-item h3 { margin:.1rem 0 .25rem; }
 .model-table { display:grid; gap:.35rem; }
 .model-row { display:grid; grid-template-columns:1fr 1.2fr 1.4fr; gap:.5rem; align-items:center; background:#fff; border:1px solid #f1d9a8; border-radius:10px; padding:.55rem .7rem; }
 .model-row.head { background:#fff3d6; font-weight:800; color:#6b4f1f; }
 @media (max-width: 640px) { .model-row { grid-template-columns:1fr; } }
+
+/* ===== Concept map ===== */
+.concept-chip-list { display:flex; flex-wrap:wrap; gap:.45rem; }
+.concept-chip-list a, .concept-links a { display:inline-flex; text-decoration:none; color:#1864ab; background:#e7f5ff; border:1px solid #cdeffd; border-radius:999px; padding:.25rem .6rem; font-weight:700; margin-right:.35rem; margin-bottom:.25rem; }
+.concept-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:1rem; }
+.concept-card { scroll-margin-top: 120px; background:#fff; border:1px solid #f1d9a8; border-radius:16px; padding:1rem; box-shadow:0 5px 16px rgba(0,0,0,.05); }
+.concept-card:target { outline: 3px solid #ffd97d; box-shadow:0 0 0 6px rgba(255,217,125,.25); }
+.concept-card h2 { margin:.1rem 0 .4rem; color:#6b4f1f; }
+.concept-short { background:#fffaf0; border-left:4px solid #ffd97d; border-radius:10px; padding:.55rem .7rem; font-weight:700; }
 
 /* ===== Corridor formula explainer ===== */
 .corridor-formula { background:#fffaf0; border:1px dashed #d6c7a8; border-radius:12px; padding:.5rem .8rem; margin:.5rem 0; }

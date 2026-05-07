@@ -44,8 +44,13 @@ export default function HomePage() {
         </article>
         <article className="card">
           <h3>💡 莱布尼茨 · 让我们计算吧</h3>
-          <p>“Calculemus” 是真实的思想线索，但中文常见说法是意译。看看它和今天的图论、算法有什么关系。</p>
+          <p>从 “Calculemus!” 这颗种子出发，看人类怎样把思想、规则、图、机器、向量和概率一步步连起来。</p>
           <p><Link to="/leibniz">看历史故事 →</Link></p>
+        </article>
+        <article className="card">
+          <h3>📚 术语地图 · 遇到名词不害怕</h3>
+          <p>点、边、状态空间、BFS、minimax、向量……都放在一个小词典里，用例子慢慢解释。</p>
+          <p><Link to="/concepts">查术语 →</Link></p>
         </article>
       </section>
 
@@ -57,8 +62,8 @@ export default function HomePage() {
           过河问题把故事变成状态图，再找最短路径。它们共同使用的工具，就是图论。
         </p>
         <p className="lead">
-          这正是很多人一开始会觉得“有点跳”的地方：画画、下棋、讲故事，怎么突然变成计算了？
-          所以这个网站要把中间那一步讲清楚：<strong>不是直接算，而是用图论先把问题翻译成能算的样子。</strong>
+          中间最重要的一步是<strong>翻译</strong>：不是直接算，而是用图论先把问题翻译成能算的样子。
+          先看见点和边，再看见状态和路径，最后才让计算帮忙。
           这也是 <Link to="/leibniz">莱布尼茨 “Calculemus”</Link> 最值得给孩子讲的地方。
         </p>
       </section>

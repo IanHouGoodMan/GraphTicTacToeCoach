@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   BOAT_CAP, TOTAL_BIG, TOTAL_KID,
   buildGraph, goalState, initialState, key, legalMoves, rb, rk,
@@ -82,7 +83,7 @@ export default function RiverCrossingPage() {
           （否则小朋友会闹翻天 🙈）。船每次至少要 1 个人划。
         </p>
         <p className="lead">
-          这是一个非常经典的「<strong>把现实问题变成图</strong>」的例子：每一种「左岸有几个大人、几个小朋友、船在哪边」就是一张「状态卡」，
+          这是一个非常经典的「<Link to="/concepts#modeling">把现实问题变成图</Link>」的例子：每一种「左岸有几个大人、几个小朋友、船在哪边」就是一张「状态卡」，
           一次合法的划船就把这张卡连到下一张卡。问题就变成「从开局这张卡，沿着边走到目标卡」。
         </p>
       </section>
@@ -151,7 +152,7 @@ export default function RiverCrossingPage() {
         <StateGraphView graph={graph} history={history} optimal={optimal} />
         <p className="proof-note" style={{ marginTop: '.6rem' }}>
           💡 想一想：本来「3 个大人 + 3 个小朋友 + 一条船」听起来很复杂，可是一旦把「状态」画成点、把「划船」画成边，
-          它就变成一个我们熟悉的<strong>找最短路径</strong>的图论问题了。这就是数学家解决问题的常用招数：
+          它就变成一个我们熟悉的<Link to="/concepts#shortest-path">找最短路径</Link>的图论问题了。这就是数学家解决问题的常用招数：
           <strong>给问题换个表示方式</strong>。
         </p>
       </section>
@@ -159,15 +160,15 @@ export default function RiverCrossingPage() {
       <section className="panel">
         <h2>📚 这道题里出现的图论概念</h2>
         <ul>
-          <li><strong>状态空间</strong>：所有合法状态合在一起就是 16 张状态卡，正好是图的 16 个点。</li>
-          <li><strong>连通性</strong>：从开局出发能不能走到目标？这等于问「目标点和开局点连通吗？」答案是：连通。</li>
-          <li><strong>最短路径</strong>：用 <strong>BFS（广度优先搜索）</strong>从开局向外一层层扩展，第一次碰到目标时的步数就是最短步数。</li>
-          <li><strong>有向 / 无向</strong>：这道题里每一步都可以撤回，所以可以当成<strong>无向图</strong>。</li>
-          <li><strong>加权图</strong>：如果不同的「划船」有不同代价（比如划得久、划得短），就要给边加上权重，最短路径就要用 Dijkstra 这种算法了。</li>
+          <li><Link to="/concepts#state-space">状态空间</Link>：所有合法状态合在一起就是 16 张状态卡，正好是图的 16 个点。</li>
+          <li><Link to="/concepts#connected">连通性</Link>：从开局出发能不能走到目标？这等于问「目标点和开局点连通吗？」答案是：连通。</li>
+          <li><Link to="/concepts#shortest-path">最短路径</Link>：用 <Link to="/concepts#bfs">BFS（广度优先搜索）</Link>从开局向外一层层扩展，第一次碰到目标时的步数就是最短步数。</li>
+          <li><Link to="/concepts#directed">有向 / 无向</Link>：这道题里每一步都可以撤回，所以可以当成<strong>无向图</strong>。</li>
+          <li><Link to="/concepts#weighted">加权图</Link>：如果不同的「划船」有不同代价（比如划得久、划得短），就要给边加上权重，最短路径就要用 <Link to="/concepts#dijkstra">Dijkstra</Link> 这种算法了。</li>
         </ul>
         <p className="lead">
-          <em>数学家莱布尼茨说过：「别吵了，把意见写下来，算一算就知道结果。」</em>
-          这道题就是这样：把「过河怎么走」写成图，让数学帮我们一步步算清楚。
+          这道题展示的正是 <Link to="/leibniz">Calculemus</Link> 的精神：
+          把「过河怎么走」写成状态图，让数学帮我们一步步检查、一步步算清楚。
         </p>
       </section>
     </>

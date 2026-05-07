@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function GraphBasicsPage() {
   return (
@@ -7,7 +8,7 @@ export default function GraphBasicsPage() {
         <p className="eyebrow">第 1 课 · 看得见的数学</p>
         <h1>什么是图论？📐</h1>
         <p className="lead">
-          「图论」里的「图」，不是画画的图，而是<strong>点</strong>和<strong>线</strong>组成的关系图。
+          「图论」里的「图」，不是画画的图，而是<Link to="/concepts#vertex">点</Link>和<Link to="/concepts#edge">线</Link>组成的关系图。
           只要能用「谁和谁有关系」来描述的事情，都可以画成一张图。
         </p>
       </section>
@@ -15,7 +16,7 @@ export default function GraphBasicsPage() {
       <section className="panel">
         <h2>① 点（顶点）和 边</h2>
         <p className="lead">
-          每个圆圈是一个<strong>点</strong>（也叫顶点 vertex），把两个点连起来的线叫做一条<strong>边</strong>（edge）。
+          每个圆圈是一个<Link to="/concepts#vertex">点</Link>（也叫顶点 vertex），把两个点连起来的线叫做一条<Link to="/concepts#edge">边</Link>（edge）。
           下面这张图里，4 个小朋友谁认识谁，就用边连起来。
         </p>
         <FriendsGraph />
@@ -28,8 +29,8 @@ export default function GraphBasicsPage() {
       <section className="panel">
         <h2>② 路径 与 连通</h2>
         <p className="lead">
-          沿着边一直走，从一个点走到另一个点，走过的边连起来就是一条<strong>路径</strong>（path）。
-          如果图里任意两个点都有路径连通，这张图就是<strong>连通的</strong>。
+          沿着边一直走，从一个点走到另一个点，走过的边连起来就是一条<Link to="/concepts#path">路径</Link>（path）。
+          如果图里任意两个点都有路径连通，这张图就是<Link to="/concepts#connected">连通的</Link>。
         </p>
         <PathDemo />
         <ul>
@@ -41,7 +42,7 @@ export default function GraphBasicsPage() {
       <section className="panel">
         <h2>③ 树：没有圈圈的连通图 🌳</h2>
         <p className="lead">
-          如果一张连通的图里，怎么走都没办法绕回到同一个点，那就叫做一棵<strong>树</strong>。
+          如果一张连通的图里，怎么走都没办法绕回到同一个点，那就叫做一棵<Link to="/concepts#tree">树</Link>。
           家谱图、文件夹结构、井字棋的「下一步、再下一步」展开图，都是树。
         </p>
         <TreeDemo />
@@ -51,7 +52,7 @@ export default function GraphBasicsPage() {
         <h2>④ 一笔画：欧拉的发现 ✏️</h2>
         <p className="lead">
           能不能不抬笔、不重复画一条边、把所有边都画完？这叫<strong>一笔画</strong>。
-          数学家欧拉发现：只要数一数有几个点是<strong>奇数度</strong>，就能马上判断。
+          数学家欧拉发现：只要数一数有几个点是<Link to="/concepts#degree">奇数度</Link>，就能马上判断。
         </p>
         <ul>
           <li>所有点都是偶数度 → 能一笔画，而且能回到起点。</li>
@@ -65,17 +66,17 @@ export default function GraphBasicsPage() {
         <h2>⑤ 有向图、加权图 与 最短路径 🛣️</h2>
         <p className="lead">
           前面说的边都是双向的：A 能到 B，B 也能到 A。但是有些关系是<strong>单向</strong>的，比如「A 妈妈是 B」。
-          这种边带个箭头的图，叫做<strong>有向图</strong>。
+          这种边带个箭头的图，叫做<Link to="/concepts#directed">有向图</Link>。
         </p>
         <p className="lead">
-          有时候每条边还要标上「走这条要花多少钱」「走这条要多少分钟」，这叫做<strong>加权图</strong>。
+          有时候每条边还要标上「走这条要花多少钱」「走这条要多少分钟」，这叫做<Link to="/concepts#weighted">加权图</Link>。
           下面这张图，标在边上的数字就是「走这条边要花多少分钟」。
         </p>
         <WeightedDemo />
         <ul>
-          <li>从 <strong>家</strong> 走到 <strong>学校</strong>，最快要多少分钟？这就是<strong>最短路径问题</strong>。</li>
+          <li>从 <strong>家</strong> 走到 <strong>学校</strong>，最快要多少分钟？这就是<Link to="/concepts#shortest-path">最短路径问题</Link>。</li>
           <li>把每条路想成一段时间，最短路径就是「加起来时间最少的那条」。</li>
-          <li>电脑可以用一个叫 <strong>Dijkstra</strong> 的算法，从起点一层一层往外算，谁先被算到，谁就是最近的。</li>
+          <li>电脑可以用一个叫 <Link to="/concepts#dijkstra">Dijkstra</Link> 的算法，从起点一层一层往外算，谁先被算到，谁就是最近的。</li>
         </ul>
         <p className="proof-note">
           💡 在 <a href="#/river">过河问题</a> 里也用了这个思路：把每种过河状态看成一个点，每次划船看成一条边，
@@ -86,12 +87,12 @@ export default function GraphBasicsPage() {
       <section className="panel">
         <h2>⑥ 把井字棋变成一张大图 ♟️</h2>
         <p className="lead">
-          每一种棋盘的样子（局面）都可以看成一个<strong>点</strong>，每走一步棋就是从一个点走到另一个点的<strong>边</strong>。
-          这样井字棋整盘游戏就变成了一棵<strong>巨大的树</strong>：根是空棋盘，往下分叉很多很多次。
+          每一种棋盘的样子（局面）都可以看成一个<Link to="/concepts#vertex">点</Link>，每走一步棋就是从一个点走到另一个点的<Link to="/concepts#edge">边</Link>。
+          这样井字棋整盘游戏就变成了一棵<Link to="/concepts#tree">巨大的树</Link>：根是空棋盘，往下分叉很多很多次。
         </p>
         <p className="lead">
           电脑玩井字棋，就是在这棵树上「往前看几步」，挑出最好的那条路走。
-          这个方法叫 <strong>minimax</strong>（极小化极大），它是一个传统的<strong>搜索算法</strong>，
+          这个方法叫 <Link to="/concepts#minimax">minimax</Link>（极小化极大），它是一个传统的<strong>搜索算法</strong>，
           不需要训练，靠的就是把所有可能想清楚。先去 <a href="#/proofs">数学证明</a> 看为什么可靠，
           再去 <a href="#/vs-computer">算法对战</a> 看它怎么思考。
         </p>

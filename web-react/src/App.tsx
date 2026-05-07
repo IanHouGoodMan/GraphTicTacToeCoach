@@ -6,6 +6,7 @@ import VsComputerPage from './pages/VsComputerPage';
 import EulerPracticePage from './pages/EulerPracticePage';
 import RiverCrossingPage from './pages/RiverCrossingPage';
 import LeibnizStoryPage from './pages/LeibnizStoryPage';
+import ConceptsPage from './pages/ConceptsPage';
 
 const NAV = [
   { to: '/', label: '🏠 首页', end: true },
@@ -14,7 +15,8 @@ const NAV = [
   { to: '/vs-computer', label: '🧠 算法对战' },
   { to: '/euler', label: '✏️ 一笔画练习' },
   { to: '/river', label: '🚣 过河问题' },
-  { to: '/leibniz', label: '💡 可计算的思想' }
+  { to: '/leibniz', label: '💡 可计算的思想' },
+  { to: '/concepts', label: '📚 术语地图' }
 ];
 
 export default function App() {
@@ -50,6 +52,7 @@ export default function App() {
             <Route path="/euler" element={<EulerPracticePage />} />
             <Route path="/river" element={<RiverCrossingPage />} />
             <Route path="/leibniz" element={<LeibnizStoryPage />} />
+            <Route path="/concepts" element={<ConceptsPage />} />
           </Routes>
         </div>
       </main>
