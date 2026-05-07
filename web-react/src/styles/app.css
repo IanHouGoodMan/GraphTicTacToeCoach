@@ -237,6 +237,19 @@ body {
 /* ===== Leibniz banner ===== */
 .leibniz-banner { background: linear-gradient(90deg,#fff3a3,#ffd97d); color:#5b3a00; text-align:center; padding:.5rem .8rem; font-size:.92rem; font-weight:600; border-bottom:1px solid #e0b870; }
 .leibniz-banner em { color:#a14c00; font-style:italic; margin-right:.25rem; }
+.leibniz-banner a { color:#7a3b00; font-weight:800; margin-left:.35rem; }
+
+/* ===== Story page ===== */
+.story-panel { line-height: 1.65; }
+.quote-card { background:#fff; border:1px solid #f1d9a8; border-radius:16px; padding:1rem; box-shadow:0 4px 12px rgba(0,0,0,.05); }
+.quote-mark { margin:.1rem 0 .6rem; font-size:1.6rem; font-weight:900; color:#a14c00; }
+.story-grid { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+.story-card { background:#fff; border:1px solid #f1d9a8; border-radius:14px; padding:.9rem; }
+.story-card h3 { margin-top:0; color:#6b4f1f; }
+.model-table { display:grid; gap:.35rem; }
+.model-row { display:grid; grid-template-columns:1fr 1.2fr 1.4fr; gap:.5rem; align-items:center; background:#fff; border:1px solid #f1d9a8; border-radius:10px; padding:.55rem .7rem; }
+.model-row.head { background:#fff3d6; font-weight:800; color:#6b4f1f; }
+@media (max-width: 640px) { .model-row { grid-template-columns:1fr; } }
 
 /* ===== Corridor formula explainer ===== */
 .corridor-formula { background:#fffaf0; border:1px dashed #d6c7a8; border-radius:12px; padding:.5rem .8rem; margin:.5rem 0; }

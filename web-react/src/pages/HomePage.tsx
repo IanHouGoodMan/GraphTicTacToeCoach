@@ -7,9 +7,9 @@ export default function HomePage() {
         <p className="eyebrow">给爱思考的小朋友</p>
         <h1>欢迎来到图论小学堂 ✨</h1>
         <p className="lead">
-          这里把数学课里的<strong>图论</strong>变成三个小活动：先看一遍基础知识，
-          再读懂一笔画和井字棋的数学证明，接着看电脑用「搜索算法」下井字棋，
-          最后用手指在 iPad 上画一笔画。
+          这里不是把图论硬塞进游戏里，而是想练一种很重要的本领：
+          <strong>把看起来不像计算题的问题，先变成点、边、状态和数字，再计算。</strong>
+          一笔画、井字棋、过河问题，就是三个适合小朋友亲手探索的例子。
         </p>
       </section>
 
@@ -42,15 +42,24 @@ export default function HomePage() {
             问题就变成「找一条最短路径」。</p>
           <p><Link to="/river">去过河 →</Link></p>
         </article>
+        <article className="card">
+          <h3>💡 莱布尼茨 · 让我们计算吧</h3>
+          <p>“Calculemus” 是真实的思想线索，但中文常见说法是意译。看看它和今天的图论、算法有什么关系。</p>
+          <p><Link to="/leibniz">看历史故事 →</Link></p>
+        </article>
       </section>
 
       <section className="panel" style={{ marginTop: '1rem' }}>
         <h2>🔮 这个网站想说的一件事</h2>
         <p className="lead">
-          很多看起来「需要争论」的问题，其实可以先<strong>把它写下来变成数</strong>，再让数学/算法去算。
-          井字棋的 minimax 把胜负变成 +1 / 0 / −1；过河问题把「状态」变成图上的点；一笔画把「能不能画」
-          变成「奇数度点有几个」。这就是莱布尼茨的那句口号：
-          <em> Calculemus —— 让我们计算吧。</em>
+          是的，现在的三个探索问题都在做同一件事：<strong>建模 → 计算 → 验证</strong>。
+          一笔画把“能不能画”变成数奇数度点；井字棋把“哪一步好”变成局面树上的分数；
+          过河问题把故事变成状态图，再找最短路径。
+        </p>
+        <p className="lead">
+          这正是很多人一开始会觉得“有点扯”的地方：画画、下棋、讲故事，怎么突然变成计算了？
+          所以这个网站要把中间那一步讲清楚：<strong>不是直接算，而是先把问题翻译成能算的样子。</strong>
+          这也是 <Link to="/leibniz">莱布尼茨 “Calculemus”</Link> 最值得给孩子讲的地方。
         </p>
       </section>
     </>
