@@ -7,6 +7,7 @@ import EulerPracticePage from './pages/EulerPracticePage';
 import RiverCrossingPage from './pages/RiverCrossingPage';
 import LeibnizStoryPage from './pages/LeibnizStoryPage';
 import ConceptsPage from './pages/ConceptsPage';
+import FloatingBalloons from './components/FloatingBalloons';
 
 const NAV = [
   { to: '/', label: '🏠 首页', end: true },
@@ -58,6 +59,7 @@ export default function App() {
       </main>
 
       <footer className="page-footer">图论小课堂 · 用图论玩转小学数学</footer>
+      <FloatingBalloons />
     </div>
   );
 }
