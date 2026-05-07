@@ -8,7 +8,6 @@ type QuoteMoment = {
 
 type SceneMoment = {
   kind: 'scene';
-  title: string;
   scene: SceneKind;
 };
 
@@ -37,20 +36,20 @@ const moments: Moment[] = [
   { kind: 'quote', text: '怎么有点扯，能从这个扯到那个？', people: 'mom-sister' },
   { kind: 'quote', text: '孩子的屁你都觉得是香的啦', people: 'mom' },
   { kind: 'quote', text: '维特根斯坦，看了一半怎么只讲一个人，另一个人呢？', people: 'little' },
-  { kind: 'scene', title: '在法国巴黎的场景', scene: 'paris' },
-  { kind: 'scene', title: '在日本北海道', scene: 'hokkaido' },
-  { kind: 'scene', title: '在日本大阪', scene: 'osaka' },
-  { kind: 'scene', title: '在日本东京', scene: 'tokyo' },
-  { kind: 'scene', title: '登山徒步', scene: 'hiking' },
-  { kind: 'scene', title: '上课教英语', scene: 'english-class' },
-  { kind: 'scene', title: '深夜编程', scene: 'coding-night' },
-  { kind: 'scene', title: '在看海德格尔', scene: 'heidegger' },
+  { kind: 'scene', scene: 'paris' },
+  { kind: 'scene', scene: 'hokkaido' },
+  { kind: 'scene', scene: 'osaka' },
+  { kind: 'scene', scene: 'tokyo' },
+  { kind: 'scene', scene: 'hiking' },
+  { kind: 'scene', scene: 'english-class' },
+  { kind: 'scene', scene: 'coding-night' },
+  { kind: 'scene', scene: 'heidegger' },
   { kind: 'quote', text: '要认真读书', people: 'dad' },
   { kind: 'quote', text: '优秀', people: 'dad' },
   { kind: 'quote', text: '请阅郁达夫', people: 'dad' },
   { kind: 'quote', text: '请阅读哲学', people: 'dad' },
   { kind: 'quote', text: '变形记', people: 'dad' },
-  { kind: 'scene', title: '跳 hiphop 舞蹈', scene: 'hiphop' }
+  { kind: 'scene', scene: 'hiphop' }
 ];
 
 const balloonColors = ['#ff7e9f', '#ffd166', '#74c0fc', '#95d5b2', '#b197fc', '#ffb86b'];
@@ -155,9 +154,6 @@ export default function FloatingBalloons() {
       {enabled && pop && (
         <aside className="balloon-pop-card" style={{ left: `clamp(1rem, ${pop.x}%, calc(100vw - 19rem))` }}>
           <Illustration item={pop.item} />
-          <div className="balloon-pop-copy">
-            {pop.item.kind === 'quote' ? <p>“{pop.item.text}”</p> : <p>{pop.item.title}</p>}
-          </div>
         </aside>
       )}
     </div>
@@ -180,25 +176,23 @@ function pick<T>(items: T[]): T {
 }
 
 function Illustration({ item }: { item: Moment }) {
-  if (item.kind === 'scene') return <Scene scene={item.scene} title={item.title} />;
+  if (item.kind === 'scene') return <Scene scene={item.scene} />;
   return <Avatar people={item.people} />;
 }
 
 function Avatar({ people }: { people: PeopleKind }) {
   if (people === 'mom-sister') {
     return (
-      <svg className="balloon-pop-art" viewBox="0 0 240 170" role="img" aria-label="妈妈和姐姐卡通头像">
+      <svg className="balloon-pop-art" viewBox="0 0 240 170" role="img" aria-label="家庭卡通头像">
         <rect width="240" height="170" rx="22" fill="#fff3d6" />
         <SinglePerson x={78} y={90} skin="#ffd8b5" hair="#3a2c1f" shirt="#dbeafe" kind="mom" />
         <SinglePerson x={162} y={90} skin="#ffd8b5" hair="#2b2118" shirt="#fde2e4" kind="sister" />
-        <text x="120" y="151" textAnchor="middle" fontSize="16" fontWeight="800" fill="#6b4f1f">妈妈 + 姐姐</text>
       </svg>
     );
   }
 
-  const label = people === 'little' ? '妹妹' : people === 'sister' ? '姐姐' : people === 'mom' ? '妈妈' : '爸爸';
   return (
-    <svg className="balloon-pop-art" viewBox="0 0 240 170" role="img" aria-label={`${label}卡通头像`}>
+    <svg className="balloon-pop-art" viewBox="0 0 240 170" role="img" aria-label="家庭卡通头像">
       <rect width="240" height="170" rx="22" fill={people === 'dad' ? '#e7f5ff' : people === 'mom' ? '#eaf7ea' : '#fff3d6'} />
       <SinglePerson
         x={120}
@@ -208,7 +202,6 @@ function Avatar({ people }: { people: PeopleKind }) {
         shirt={people === 'dad' ? '#6c757d' : people === 'mom' ? '#b7e4c7' : people === 'sister' ? '#ffd6e0' : '#ffd97d'}
         kind={people}
       />
-      <text x="120" y="151" textAnchor="middle" fontSize="18" fontWeight="900" fill="#6b4f1f">{label}</text>
     </svg>
   );
 }
@@ -252,13 +245,12 @@ function Glasses({ x, y }: { x: number; y: number }) {
   );
 }
 
-function Scene({ scene, title }: { scene: SceneKind; title: string }) {
+function Scene({ scene }: { scene: SceneKind }) {
   return (
-    <svg className="balloon-pop-art" viewBox="0 0 240 170" role="img" aria-label={title}>
+    <svg className="balloon-pop-art" viewBox="0 0 240 170" role="img" aria-label="家庭回忆场景图">
       <rect width="240" height="170" rx="22" fill={sceneBackground(scene)} />
       <SceneBackdrop scene={scene} />
       <ScenePerson scene={scene} />
-      <text x="120" y="151" textAnchor="middle" fontSize="15" fontWeight="900" fill="#3a2c1f">{title}</text>
     </svg>
   );
 }

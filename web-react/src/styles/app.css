@@ -408,14 +408,6 @@ body {
   overflow: hidden;
 }
 
-.balloon-pop-copy p {
-  margin: .5rem .25rem .15rem;
-  color: #4a2c0d;
-  font-weight: 900;
-  line-height: 1.45;
-  text-align: center;
-}
-
 @keyframes balloon-rise {
   from { bottom: -120px; opacity: .98; }
   92% { opacity: .98; }
