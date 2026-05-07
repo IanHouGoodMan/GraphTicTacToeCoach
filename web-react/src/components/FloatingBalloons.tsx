@@ -14,7 +14,7 @@ type SceneMoment = {
 type Moment = QuoteMoment | SceneMoment;
 
 type PeopleKind = 'little' | 'sister' | 'mom' | 'mom-sister' | 'dad';
-type SceneKind = 'paris' | 'hokkaido' | 'osaka' | 'tokyo' | 'hiking' | 'english-class' | 'coding-night' | 'heidegger' | 'hiphop';
+type SceneKind = 'paris' | 'hokkaido' | 'osaka' | 'tokyo' | 'hiking' | 'english-class' | 'coding-night' | 'heidegger' | 'nietzsche' | 'hiphop' | 'skateboard';
 
 type BalloonState = {
   id: number;
@@ -44,12 +44,14 @@ const moments: Moment[] = [
   { kind: 'scene', scene: 'english-class' },
   { kind: 'scene', scene: 'coding-night' },
   { kind: 'scene', scene: 'heidegger' },
+  { kind: 'scene', scene: 'nietzsche' },
   { kind: 'quote', text: '要认真读书', people: 'dad' },
   { kind: 'quote', text: '优秀', people: 'dad' },
   { kind: 'quote', text: '请阅郁达夫', people: 'dad' },
   { kind: 'quote', text: '请阅读哲学', people: 'dad' },
   { kind: 'quote', text: '变形记', people: 'dad' },
-  { kind: 'scene', scene: 'hiphop' }
+  { kind: 'scene', scene: 'hiphop' },
+  { kind: 'scene', scene: 'skateboard' }
 ];
 
 const balloonColors = ['#ff7e9f', '#ffd166', '#74c0fc', '#95d5b2', '#b197fc', '#ffb86b'];
@@ -358,9 +360,9 @@ function Scene({ scene }: { scene: SceneKind }) {
 }
 
 function sceneBackground(scene: SceneKind) {
-  if (scene === 'coding-night' || scene === 'heidegger') return '#1b263b';
+  if (scene === 'coding-night' || scene === 'heidegger' || scene === 'nietzsche') return '#1b263b';
   if (scene === 'hokkaido') return '#e7f5ff';
-  if (scene === 'hiking') return '#eaf7ea';
+  if (scene === 'hiking' || scene === 'skateboard') return '#eaf7ea';
   return '#fff3d6';
 }
 
@@ -371,28 +373,35 @@ function SceneBackdrop({ scene }: { scene: SceneKind }) {
     case 'hokkaido':
       return <g><path d="M0 110 q60 -55 120 0 t120 0 v60 h-240z" fill="#bde0fe" /><path d="M0 118 q65 -38 120 0 t120 0 v52 h-240z" fill="#ffffff" /><circle cx="198" cy="35" r="15" fill="#ffd43b" /></g>;
     case 'osaka':
-      return <g><rect x="38" y="52" width="58" height="74" rx="8" fill="#f8f9fa" stroke="#6b4f1f" strokeWidth="3" /><path d="M32 57 h70 l-12 -20 h-46z" fill="#ffd97d" stroke="#6b4f1f" strokeWidth="3" /><circle cx="178" cy="72" r="30" fill="#ff6b6b" opacity=".25" /><circle cx="178" cy="72" r="20" fill="none" stroke="#c92a2a" strokeWidth="4" opacity=".65" /><circle cx="178" cy="72" r="8" fill="#ff8787" opacity=".9" /></g>;
+      return <g><rect x="38" y="52" width="58" height="74" rx="8" fill="#f8f9fa" stroke="#6b4f1f" strokeWidth="3" /><path d="M32 57 h70 l-12 -20 h-46z" fill="#ffd97d" stroke="#6b4f1f" strokeWidth="3" /><circle cx="178" cy="72" r="30" fill="#ff6b6b" opacity=".25" /><circle cx="178" cy="72" r="20" fill="none" stroke="#c92a2a" strokeWidth="4" opacity=".65" /><circle cx="178" cy="72" r="8" fill="#ff8787" opacity=".9" /><text x="178" y="122" textAnchor="middle" fontSize="18" fontWeight="900" fill="#c92a2a">大阪</text></g>;
     case 'tokyo':
       return <g><circle cx="190" cy="35" r="15" fill="#ffd43b" /><path d="M55 126 L75 42 L95 126" fill="none" stroke="#e8590c" strokeWidth="7" strokeLinecap="round" /><path d="M45 78 h60 M38 106 h74" stroke="#e8590c" strokeWidth="5" strokeLinecap="round" /><rect x="144" y="78" width="52" height="48" fill="#bde0fe" stroke="#1864ab" strokeWidth="3" /></g>;
     case 'hiking':
       return <g><circle cx="200" cy="35" r="15" fill="#ffd43b" /><path d="M0 126 L62 62 L108 126 Z" fill="#95d5b2" /><path d="M54 70 l10 22 l12 -22" fill="#fff" /><path d="M86 126 L152 52 L220 126 Z" fill="#74c69d" /><path d="M143 62 l13 26 l16 -26" fill="#fff" /></g>;
     case 'english-class':
-      return <g><rect x="32" y="35" width="176" height="82" rx="8" fill="#2b8a3e" /><path d="M62 63 h96 M62 82 h120 M62 101 h74" stroke="#d8f3dc" strokeWidth="5" strokeLinecap="round" opacity=".9" /><circle cx="178" cy="63" r="10" fill="none" stroke="#fff" strokeWidth="3" /><path d="M174 78 l9 0 l-5 10 z" fill="#fff" opacity=".85" /></g>;
+      return <g><rect x="32" y="35" width="176" height="82" rx="8" fill="#2b8a3e" /><text x="120" y="62" textAnchor="middle" fontSize="18" fontWeight="900" fill="#fff">English</text><path d="M62 82 h120 M62 101 h74" stroke="#d8f3dc" strokeWidth="5" strokeLinecap="round" opacity=".9" /><circle cx="178" cy="63" r="10" fill="none" stroke="#fff" strokeWidth="3" /><path d="M174 78 l9 0 l-5 10 z" fill="#fff" opacity=".85" /></g>;
     case 'coding-night':
-      return <g><circle cx="202" cy="32" r="13" fill="#ffd43b" /><circle cx="198" cy="28" r="13" fill="#1b263b" /><rect x="44" y="48" width="152" height="82" rx="8" fill="#0b132b" stroke="#74c0fc" strokeWidth="3" /><path d="M78 76 l-18 14 l18 14 M162 76 l18 14 l-18 14 M112 69 l-18 46" stroke="#95d5b2" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round" /><circle cx="130" cy="91" r="5" fill="#ffd43b" /></g>;
+      return <g><circle cx="202" cy="32" r="13" fill="#ffd43b" /><circle cx="198" cy="28" r="13" fill="#1b263b" /><rect x="44" y="48" width="152" height="82" rx="8" fill="#0b132b" stroke="#74c0fc" strokeWidth="3" /><text x="120" y="68" textAnchor="middle" fontSize="13" fontWeight="900" fill="#ffd43b">late night</text><path d="M78 83 l-18 14 l18 14 M162 83 l18 14 l-18 14 M112 76 l-18 46" stroke="#95d5b2" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round" /><circle cx="130" cy="98" r="5" fill="#ffd43b" /></g>;
     case 'heidegger':
-      return <g><circle cx="198" cy="35" r="13" fill="#ffd43b" /><rect x="58" y="46" width="78" height="90" rx="6" fill="#f8f1e4" stroke="#d6c7a8" strokeWidth="3" /><path d="M75 70 h44 M75 86 h34 M75 102 h40 M75 118 h28" stroke="#6b5a43" strokeWidth="4" strokeLinecap="round" opacity=".75" /><path d="M67 50 v82" stroke="#d6c7a8" strokeWidth="3" /></g>;
+      return <g><circle cx="198" cy="35" r="13" fill="#ffd43b" /><rect x="48" y="44" width="88" height="92" rx="6" fill="#f8f1e4" stroke="#d6c7a8" strokeWidth="3" /><text x="92" y="72" textAnchor="middle" fontSize="14" fontWeight="900" fill="#3a2c1f">Heidegger</text><text x="92" y="95" textAnchor="middle" fontSize="20" fontWeight="900" fill="#1864ab">Being</text><path d="M66 113 h52 M66 126 h38" stroke="#6b5a43" strokeWidth="4" strokeLinecap="round" opacity=".7" /><path d="M58 50 v82" stroke="#d6c7a8" strokeWidth="3" /></g>;
+    case 'nietzsche':
+      return <g><circle cx="198" cy="35" r="13" fill="#ffd43b" /><path d="M22 128 L76 58 L122 128 Z" fill="#495057" /><path d="M70 64 l8 23 l14 -23" fill="#f8f9fa" opacity=".9" /><rect x="54" y="44" width="92" height="92" rx="6" fill="#fff4d6" stroke="#d6c7a8" strokeWidth="3" /><text x="100" y="69" textAnchor="middle" fontSize="14" fontWeight="900" fill="#3a2c1f">Nietzsche</text><text x="100" y="94" textAnchor="middle" fontSize="18" fontWeight="900" fill="#c92a2a">OVERMAN</text><path d="M92 103 l-10 19 l18 -9 l-9 18 l24 -30" stroke="#ffd43b" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round" /><path d="M64 50 v82" stroke="#d6c7a8" strokeWidth="3" /></g>;
     case 'hiphop':
-      return <g><circle cx="190" cy="37" r="16" fill="#ffd43b" /><path d="M24 126 q40 -52 86 0 t98 0" fill="none" stroke="#b197fc" strokeWidth="8" strokeLinecap="round" /><circle cx="86" cy="60" r="15" fill="none" stroke="#d6336c" strokeWidth="5" /><circle cx="142" cy="58" r="15" fill="none" stroke="#d6336c" strokeWidth="5" /><path d="M101 60 h26 M86 45 q24 -24 56 -2" stroke="#d6336c" strokeWidth="5" fill="none" strokeLinecap="round" /></g>;
+      return <g><circle cx="190" cy="37" r="16" fill="#ffd43b" /><path d="M24 126 q40 -52 86 0 t98 0" fill="none" stroke="#b197fc" strokeWidth="8" strokeLinecap="round" /><text x="118" y="54" textAnchor="middle" fontSize="24" fontWeight="900" fill="#d6336c">HIPHOP</text><circle cx="82" cy="78" r="11" fill="none" stroke="#d6336c" strokeWidth="5" /><circle cx="150" cy="75" r="11" fill="none" stroke="#d6336c" strokeWidth="5" /><path d="M94 78 q26 -22 44 -2" stroke="#d6336c" strokeWidth="5" fill="none" strokeLinecap="round" /><text x="47" y="72" fontSize="22" fontWeight="900" fill="#845ef7">♪</text><text x="184" y="88" fontSize="20" fontWeight="900" fill="#845ef7">♫</text></g>;
+    case 'skateboard':
+      return <g><circle cx="198" cy="35" r="15" fill="#ffd43b" /><path d="M0 132 h240 v38 h-240z" fill="#b7e4c7" /><path d="M36 120 q44 -34 88 0 t82 0" fill="none" stroke="#74c0fc" strokeWidth="8" strokeLinecap="round" /><text x="64" y="58" textAnchor="middle" fontSize="20" fontWeight="900" fill="#1864ab">SKATE</text><path d="M112 127 q29 9 58 0" stroke="#343a40" strokeWidth="6" fill="none" strokeLinecap="round" /><circle cx="123" cy="134" r="5" fill="#495057" /><circle cx="160" cy="134" r="5" fill="#495057" /></g>;
   }
 }
 
 function ScenePerson({ scene }: { scene: SceneKind }) {
-  if (scene === 'coding-night' || scene === 'heidegger') {
-    return <SinglePerson x={168} y={104} skin="#ffd8b5" hair="#2f2620" shirt="#6c757d" kind="dad" />;
+  if (scene === 'coding-night' || scene === 'heidegger' || scene === 'nietzsche') {
+    return <SinglePerson x={168} y={104} skin="#ffd8b5" hair="#2f2620" shirt="#f8f9fa" kind="dad" />;
   }
   if (scene === 'hiking' || scene === 'english-class') {
     return <SinglePerson x={174} y={104} skin="#ffd8b5" hair="#3a2c1f" shirt={scene === 'hiking' ? '#ffb86b' : '#dbeafe'} kind="mom" />;
+  }
+  if (scene === 'skateboard') {
+    return <SinglePerson x={134} y={96} skin="#ffd8b5" hair="#2f241c" shirt="#f7e6d0" kind="little" />;
   }
   return <SinglePerson x={170} y={104} skin="#ffd8b5" hair="#2b2118" shirt={scene === 'hiphop' ? '#b197fc' : '#ffd6e0'} kind="sister" />;
 }
