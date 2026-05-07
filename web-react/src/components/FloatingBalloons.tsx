@@ -33,9 +33,16 @@ type PopState = {
 const moments: Moment[] = [
   { kind: 'quote', text: '有道理，有道理', people: 'little' },
   { kind: 'quote', text: '春风沉醉的晚上，他从我读初二就开始讲，讲到现在', people: 'sister' },
+  { kind: 'quote', text: '姐姐在巴黎', people: 'sister' },
+  { kind: 'quote', text: '姐姐在北海道', people: 'sister' },
+  { kind: 'quote', text: '姐姐在大阪', people: 'sister' },
+  { kind: 'quote', text: '姐姐在东京', people: 'sister' },
   { kind: 'quote', text: '怎么有点扯，能从这个扯到那个？', people: 'mom-sister' },
   { kind: 'quote', text: '孩子的屁你都觉得是香的啦', people: 'mom' },
+  { kind: 'quote', text: '妈妈去登山徒步啦', people: 'mom' },
+  { kind: 'quote', text: '妈妈在上英语课', people: 'mom' },
   { kind: 'quote', text: '维特根斯坦，看了一半怎么只讲一个人，另一个人呢？', people: 'little' },
+  { kind: 'quote', text: '妹妹去滑滑板啦', people: 'little' },
   { kind: 'scene', scene: 'paris' },
   { kind: 'scene', scene: 'hokkaido' },
   { kind: 'scene', scene: 'osaka' },
@@ -47,7 +54,7 @@ const moments: Moment[] = [
   { kind: 'scene', scene: 'nietzsche' },
   { kind: 'quote', text: '要认真读书', people: 'dad' },
   { kind: 'quote', text: '优秀', people: 'dad' },
-  { kind: 'quote', text: '请阅郁达夫', people: 'dad' },
+  { kind: 'quote', text: '请阅读郁达夫', people: 'dad' },
   { kind: 'quote', text: '请阅读哲学', people: 'dad' },
   { kind: 'quote', text: '变形记', people: 'dad' },
   { kind: 'scene', scene: 'hiphop' },
@@ -369,13 +376,13 @@ function sceneBackground(scene: SceneKind) {
 function SceneBackdrop({ scene }: { scene: SceneKind }) {
   switch (scene) {
     case 'paris':
-      return <g><circle cx="192" cy="35" r="16" fill="#ffd43b" /><path d="M52 126 L92 34 L132 126 M74 78 h36 M64 104 h56" stroke="#6b4f1f" strokeWidth="6" fill="none" strokeLinecap="round" /><path d="M42 126 h100" stroke="#6b4f1f" strokeWidth="6" strokeLinecap="round" /></g>;
+      return <g><circle cx="192" cy="35" r="16" fill="#ffd43b" /><path d="M52 126 L92 34 L132 126 M74 78 h36 M64 104 h56" stroke="#6b4f1f" strokeWidth="6" fill="none" strokeLinecap="round" /><path d="M42 126 h100" stroke="#6b4f1f" strokeWidth="6" strokeLinecap="round" /><text x="90" y="145" textAnchor="middle" fontSize="16" fontWeight="900" fill="#6b4f1f">Paris</text></g>;
     case 'hokkaido':
-      return <g><path d="M0 110 q60 -55 120 0 t120 0 v60 h-240z" fill="#bde0fe" /><path d="M0 118 q65 -38 120 0 t120 0 v52 h-240z" fill="#ffffff" /><circle cx="198" cy="35" r="15" fill="#ffd43b" /></g>;
+      return <g><path d="M0 110 q60 -55 120 0 t120 0 v60 h-240z" fill="#bde0fe" /><path d="M0 118 q65 -38 120 0 t120 0 v52 h-240z" fill="#ffffff" /><circle cx="198" cy="35" r="15" fill="#ffd43b" /><text x="90" y="145" textAnchor="middle" fontSize="16" fontWeight="900" fill="#1864ab">Hokkaido</text></g>;
     case 'osaka':
-      return <g><rect x="38" y="52" width="58" height="74" rx="8" fill="#f8f9fa" stroke="#6b4f1f" strokeWidth="3" /><path d="M32 57 h70 l-12 -20 h-46z" fill="#ffd97d" stroke="#6b4f1f" strokeWidth="3" /><circle cx="178" cy="72" r="30" fill="#ff6b6b" opacity=".25" /><circle cx="178" cy="72" r="20" fill="none" stroke="#c92a2a" strokeWidth="4" opacity=".65" /><circle cx="178" cy="72" r="8" fill="#ff8787" opacity=".9" /><text x="178" y="122" textAnchor="middle" fontSize="18" fontWeight="900" fill="#c92a2a">大阪</text></g>;
+      return <g><rect x="38" y="52" width="58" height="74" rx="8" fill="#f8f9fa" stroke="#6b4f1f" strokeWidth="3" /><path d="M32 57 h70 l-12 -20 h-46z" fill="#ffd97d" stroke="#6b4f1f" strokeWidth="3" /><circle cx="178" cy="72" r="30" fill="#ff6b6b" opacity=".25" /><circle cx="178" cy="72" r="20" fill="none" stroke="#c92a2a" strokeWidth="4" opacity=".65" /><circle cx="178" cy="72" r="8" fill="#ff8787" opacity=".9" /><text x="177" y="119" textAnchor="middle" fontSize="17" fontWeight="900" fill="#c92a2a">Osaka</text><text x="177" y="137" textAnchor="middle" fontSize="15" fontWeight="900" fill="#c92a2a">大阪</text></g>;
     case 'tokyo':
-      return <g><circle cx="190" cy="35" r="15" fill="#ffd43b" /><path d="M55 126 L75 42 L95 126" fill="none" stroke="#e8590c" strokeWidth="7" strokeLinecap="round" /><path d="M45 78 h60 M38 106 h74" stroke="#e8590c" strokeWidth="5" strokeLinecap="round" /><rect x="144" y="78" width="52" height="48" fill="#bde0fe" stroke="#1864ab" strokeWidth="3" /></g>;
+      return <g><circle cx="190" cy="35" r="15" fill="#ffd43b" /><path d="M55 126 L75 42 L95 126" fill="none" stroke="#e8590c" strokeWidth="7" strokeLinecap="round" /><path d="M45 78 h60 M38 106 h74" stroke="#e8590c" strokeWidth="5" strokeLinecap="round" /><rect x="144" y="78" width="52" height="48" fill="#bde0fe" stroke="#1864ab" strokeWidth="3" /><text x="75" y="145" textAnchor="middle" fontSize="17" fontWeight="900" fill="#e8590c">Tokyo</text></g>;
     case 'hiking':
       return <g><circle cx="200" cy="35" r="15" fill="#ffd43b" /><path d="M0 126 L62 62 L108 126 Z" fill="#95d5b2" /><path d="M54 70 l10 22 l12 -22" fill="#fff" /><path d="M86 126 L152 52 L220 126 Z" fill="#74c69d" /><path d="M143 62 l13 26 l16 -26" fill="#fff" /></g>;
     case 'english-class':
