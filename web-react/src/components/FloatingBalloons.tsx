@@ -14,7 +14,7 @@ type SceneMoment = {
 type Moment = QuoteMoment | SceneMoment;
 
 type PeopleKind = 'little' | 'sister' | 'mom' | 'mom-sister' | 'dad';
-type SceneKind = 'paris' | 'hokkaido' | 'osaka' | 'tokyo' | 'hiking' | 'english-class' | 'coding-night' | 'heidegger' | 'nietzsche' | 'philosophy100' | 'life-book' | 'achang' | 'yugu-juan' | 'poetry-life' | 'suxin' | 'composition' | 'plant-lab' | 'math-wu' | 'three-hum' | 'ah-chang-ending' | 'yu-dafu-journey' | 'hiphop' | 'skateboard';
+type SceneKind = 'paris' | 'hokkaido' | 'osaka' | 'tokyo' | 'hiking' | 'english-class' | 'coding-night' | 'heidegger' | 'nietzsche' | 'philosophy100' | 'life-book' | 'achang' | 'yugu-juan' | 'poetry-life' | 'suxin' | 'composition' | 'plant-lab' | 'math-wu' | 'three-hum' | 'ah-chang-ending' | 'yu-dafu-journey' | 'dad-talk-mom-snore' | 'mom-cooking' | 'mom-roses' | 'hiphop' | 'skateboard';
 
 type BalloonState = {
   id: number;
@@ -57,6 +57,9 @@ const moments: Moment[] = [
   { kind: 'scene', scene: 'three-hum' },
   { kind: 'scene', scene: 'ah-chang-ending' },
   { kind: 'scene', scene: 'yu-dafu-journey' },
+  { kind: 'scene', scene: 'dad-talk-mom-snore' },
+  { kind: 'scene', scene: 'mom-cooking' },
+  { kind: 'scene', scene: 'mom-roses' },
   { kind: 'quote', text: '要认真读书', people: 'dad' },
   { kind: 'quote', text: '优秀', people: 'dad' },
   { kind: 'quote', text: '请阅读郁达夫', people: 'dad' },
@@ -83,6 +86,7 @@ export default function FloatingBalloons() {
   const [balloon, setBalloon] = useState<BalloonState | null>(null);
   const [pop, setPop] = useState<PopState | null>(null);
   const started = useRef(false);
+  const nextMomentIndex = useRef(0);
   const spawnTimer = useRef<number | null>(null);
   const popTimer = useRef<number | null>(null);
 
@@ -134,7 +138,8 @@ export default function FloatingBalloons() {
 
   const puncture = () => {
     if (!balloon) return;
-    const item = pick(moments);
+    const item = moments[nextMomentIndex.current];
+    nextMomentIndex.current = (nextMomentIndex.current + 1) % moments.length;
     setPop({ id: balloon.id, x: balloon.x, item });
     setBalloon(null);
     clearTimer(popTimer);
@@ -264,7 +269,7 @@ function Avatar({ people }: { people: PeopleKind }) {
   );
 }
 
-function SinglePerson({ x, y, skin, hair, shirt, kind }: { x: number; y: number; skin: string; hair: string; shirt: string; kind: PeopleKind }) {
+function SinglePerson({ x, y, skin, hair, shirt, kind, roleProps = true }: { x: number; y: number; skin: string; hair: string; shirt: string; kind: PeopleKind; roleProps?: boolean }) {
   const faceWidth = kind === 'dad' ? 50 : kind === 'sister' ? 46 : 42;
   return (
     <g>
@@ -299,14 +304,14 @@ function SinglePerson({ x, y, skin, hair, shirt, kind }: { x: number; y: number;
           <path d={`M${x - 44} ${y + 56} h88 M${x - 46} ${y + 69} h92`} />
         </g>
       )}
-      {kind === 'mom' && (
+      {kind === 'mom' && roleProps && (
         <g>
           <rect x={x - 45} y={y + 39} width="30" height="22" rx="3" fill="#ffe8a3" stroke="#6b4f1f" strokeWidth="2" />
           <path d={`M${x - 40} ${y + 47} h20 M${x - 40} ${y + 54} h15`} stroke="#6b4f1f" strokeWidth="1.7" strokeLinecap="round" />
           <path d={`M${x + 31} ${y + 39} l22 -14`} stroke="#6b4f1f" strokeWidth="3" strokeLinecap="round" />
         </g>
       )}
-      {kind === 'sister' && (
+      {kind === 'sister' && roleProps && (
         <g>
           <path d={`M${x - 42} ${y + 45} q13 -9 26 0 v27 h-26z`} fill="#74c0fc" opacity=".9" />
           <path d={`M${x - 36} ${y + 42} q-8 11 -7 29`} stroke="#495057" strokeWidth="3" fill="none" strokeLinecap="round" />
@@ -375,7 +380,7 @@ function Scene({ scene }: { scene: SceneKind }) {
 function sceneBackground(scene: SceneKind) {
   if (scene === 'coding-night' || scene === 'heidegger' || scene === 'nietzsche' || isDadReadingScene(scene)) return '#1b263b';
   if (scene === 'hokkaido' || scene === 'plant-lab') return '#e7f5ff';
-  if (scene === 'hiking' || scene === 'skateboard') return '#eaf7ea';
+  if (scene === 'hiking' || scene === 'skateboard' || scene === 'mom-cooking' || scene === 'mom-roses') return '#eaf7ea';
   return '#fff3d6';
 }
 
@@ -423,10 +428,16 @@ function SceneBackdrop({ scene }: { scene: SceneKind }) {
       return <g><rect x="36" y="40" width="106" height="92" rx="7" fill="#fff8df" stroke="#d6c7a8" strokeWidth="3" /><path d="M49 47 v80" stroke="#d6c7a8" strokeWidth="3" /><text x="89" y="64" textAnchor="middle" fontSize="15" fontWeight="900" fill="#3a2c1f">朝花夕拾</text><text x="89" y="86" textAnchor="middle" fontSize="13" fontWeight="900" fill="#a14c00">阿长与</text><text x="89" y="104" textAnchor="middle" fontSize="13" fontWeight="900" fill="#a14c00">山海经</text><path d="M65 119 h48" stroke="#6b5a43" strokeWidth="3" strokeLinecap="round" opacity=".55" /><path d="M154 66 q16 -18 32 0 q16 -18 32 0 q-8 27 -32 42 q-24 -15 -32 -42z" fill="#ffe3ec" stroke="#d6336c" strokeWidth="3" /><path d="M178 108 q-7 12 0 23 q8 -11 0 -23z" fill="#74c0fc" /><text x="76" y="146" textAnchor="middle" fontSize="14" fontWeight="900" fill="#d6336c">几乎要哭了</text></g>;
     case 'yu-dafu-journey':
       return <g><rect x="36" y="42" width="104" height="88" rx="7" fill="#fff8df" stroke="#d6c7a8" strokeWidth="3" /><path d="M49 49 v76" stroke="#d6c7a8" strokeWidth="3" /><text x="88" y="68" textAnchor="middle" fontSize="15" fontWeight="900" fill="#3a2c1f">郁达夫</text><text x="88" y="92" textAnchor="middle" fontSize="15" fontWeight="900" fill="#1864ab">远一程</text><text x="88" y="113" textAnchor="middle" fontSize="15" fontWeight="900" fill="#1864ab">再远一程</text><path d="M150 124 q18 -58 56 -76" stroke="#74c0fc" strokeWidth="6" fill="none" strokeLinecap="round" strokeDasharray="8 8" /><path d="M182 59 l25 -13 l-8 27" fill="none" stroke="#74c0fc" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" /><circle cx="205" cy="45" r="12" fill="#ffd43b" /><text x="78" y="146" textAnchor="middle" fontSize="14" fontWeight="900" fill="#1864ab">继续远行</text></g>;
+    case 'dad-talk-mom-snore':
+      return <g><rect x="122" y="95" width="94" height="42" rx="14" fill="#ffd8a8" stroke="#8a6a3a" strokeWidth="3" /><rect x="126" y="82" width="42" height="22" rx="8" fill="#fff3bf" /><path d="M18 48 q19 -19 55 0 v30 q-36 19 -55 0z" fill="#fff" stroke="#6b4f1f" strokeWidth="3" /><text x="45" y="68" textAnchor="middle" fontSize="13" fontWeight="900" fill="#6b4f1f">爸爸说话</text><text x="178" y="62" textAnchor="middle" fontSize="22" fontWeight="900" fill="#845ef7">Zzz</text><text x="176" y="148" textAnchor="middle" fontSize="14" fontWeight="900" fill="#8a6a3a">妈妈打呼噜</text></g>;
+    case 'mom-cooking':
+      return <g><rect x="28" y="42" width="130" height="78" rx="10" fill="#fff" stroke="#d6c7a8" strokeWidth="3" /><rect x="44" y="88" width="78" height="46" rx="6" fill="#adb5bd" /><circle cx="68" cy="104" r="10" fill="#495057" opacity=".85" /><circle cx="98" cy="104" r="10" fill="#495057" opacity=".85" /><rect x="68" y="74" width="48" height="24" rx="7" fill="#ffd8a8" stroke="#8a6a3a" strokeWidth="3" /><path d="M75 71 h34" stroke="#8a6a3a" strokeWidth="4" strokeLinecap="round" /><path d="M78 66 q-8 -14 3 -24 M96 66 q-8 -14 3 -24 M112 66 q-8 -14 3 -24" stroke="#ced4da" strokeWidth="4" fill="none" strokeLinecap="round" /><text x="70" y="148" textAnchor="middle" fontSize="15" fontWeight="900" fill="#d9480f">妈妈做饭</text></g>;
+    case 'mom-roses':
+      return <g><path d="M30 127 h180" stroke="#d6c7a8" strokeWidth="8" strokeLinecap="round" /><rect x="28" y="56" width="58" height="70" rx="6" fill="#fff" stroke="#8a6a3a" strokeWidth="3" /><path d="M42 56 v70 M72 56 v70" stroke="#d6c7a8" strokeWidth="2" /><path d="M124 124 l36 -58 M132 128 l47 -56 M140 129 l59 -45" stroke="#2b8a3e" strokeWidth="4" strokeLinecap="round" /><circle cx="161" cy="63" r="8" fill="#e03131" /><circle cx="180" cy="70" r="8" fill="#f03e3e" /><circle cx="199" cy="82" r="8" fill="#c2255c" /><path d="M151 82 q13 -12 26 0 M165 95 q12 -11 24 0" stroke="#2b8a3e" strokeWidth="3" fill="none" strokeLinecap="round" /><text x="76" y="148" textAnchor="middle" fontSize="14" fontWeight="900" fill="#c2255c">买玫瑰回家</text></g>;
     case 'hiphop':
       return <g><circle cx="190" cy="37" r="16" fill="#ffd43b" /><path d="M24 126 q40 -52 86 0 t98 0" fill="none" stroke="#b197fc" strokeWidth="8" strokeLinecap="round" /><text x="118" y="54" textAnchor="middle" fontSize="24" fontWeight="900" fill="#d6336c">HIPHOP</text><circle cx="82" cy="78" r="11" fill="none" stroke="#d6336c" strokeWidth="5" /><circle cx="150" cy="75" r="11" fill="none" stroke="#d6336c" strokeWidth="5" /><path d="M94 78 q26 -22 44 -2" stroke="#d6336c" strokeWidth="5" fill="none" strokeLinecap="round" /><text x="47" y="72" fontSize="22" fontWeight="900" fill="#845ef7">♪</text><text x="184" y="88" fontSize="20" fontWeight="900" fill="#845ef7">♫</text></g>;
     case 'skateboard':
-      return <g><circle cx="198" cy="35" r="15" fill="#ffd43b" /><path d="M0 132 h240 v38 h-240z" fill="#b7e4c7" /><path d="M36 120 q44 -34 88 0 t82 0" fill="none" stroke="#74c0fc" strokeWidth="8" strokeLinecap="round" /><text x="64" y="58" textAnchor="middle" fontSize="20" fontWeight="900" fill="#1864ab">SKATE</text><path d="M112 127 q29 9 58 0" stroke="#343a40" strokeWidth="6" fill="none" strokeLinecap="round" /><circle cx="123" cy="134" r="5" fill="#495057" /><circle cx="160" cy="134" r="5" fill="#495057" /></g>;
+      return <g><circle cx="198" cy="35" r="15" fill="#ffd43b" /><path d="M0 132 h240 v38 h-240z" fill="#b7e4c7" /><path d="M34 123 q42 -32 88 0 t84 0" fill="none" stroke="#74c0fc" strokeWidth="8" strokeLinecap="round" /><text x="64" y="58" textAnchor="middle" fontSize="20" fontWeight="900" fill="#1864ab">SKATE</text><path d="M42 94 h24 M32 109 h36 M176 97 h22" stroke="#74c0fc" strokeWidth="4" strokeLinecap="round" opacity=".75" /><text x="184" y="76" fontSize="18" fontWeight="900" fill="#ff7e9f">✦</text></g>;
   }
 }
 
@@ -481,17 +492,54 @@ function isLittleReadingScene(scene: SceneKind) {
 }
 
 function ScenePerson({ scene }: { scene: SceneKind }) {
+  if (scene === 'dad-talk-mom-snore') {
+    return <g><SinglePerson x={70} y={105} skin="#ffd8b5" hair="#2f2620" shirt="#f8f9fa" kind="dad" roleProps={false} /><SinglePerson x={170} y={105} skin="#ffd8b5" hair="#2f241c" shirt="#212529" kind="mom" roleProps={false} /></g>;
+  }
   if (scene === 'coding-night' || scene === 'heidegger' || scene === 'nietzsche' || isDadReadingScene(scene)) {
     return <SinglePerson x={168} y={104} skin="#ffd8b5" hair="#2f2620" shirt="#f8f9fa" kind="dad" />;
   }
   if (scene === 'plant-lab') {
     return <SinglePerson x={170} y={104} skin="#ffd8b5" hair="#2b2118" shirt="#dbeafe" kind="sister" />;
   }
-  if (scene === 'hiking' || scene === 'english-class') {
-    return <SinglePerson x={174} y={104} skin="#ffd8b5" hair="#3a2c1f" shirt={scene === 'hiking' ? '#ffb86b' : '#dbeafe'} kind="mom" />;
+  if (scene === 'hiking' || scene === 'english-class' || scene === 'mom-cooking' || scene === 'mom-roses') {
+    return <SinglePerson x={174} y={104} skin="#ffd8b5" hair="#3a2c1f" shirt={scene === 'hiking' ? '#ffb86b' : scene === 'english-class' ? '#dbeafe' : '#212529'} kind="mom" roleProps={scene === 'english-class'} />;
   }
-  if (scene === 'skateboard' || isLittleReadingScene(scene)) {
+  if (scene === 'skateboard') {
+    return <SkaterLittlePerson />;
+  }
+  if (isLittleReadingScene(scene)) {
     return <SinglePerson x={134} y={96} skin="#ffd8b5" hair="#2f241c" shirt="#f7e6d0" kind="little" />;
   }
   return <SinglePerson x={170} y={104} skin="#ffd8b5" hair="#2b2118" shirt={scene === 'hiphop' ? '#b197fc' : '#ffd6e0'} kind="sister" />;
+}
+
+function SkaterLittlePerson() {
+  const x = 135;
+  const y = 75;
+  const hair = '#2f241c';
+  const skin = '#ffd8b5';
+
+  return (
+    <g transform={`rotate(-8 ${x} ${y + 35})`}>
+      <ellipse cx={x - 25} cy={y + 4} rx="12" ry="17" fill={hair} />
+      <ellipse cx={x + 25} cy={y + 4} rx="12" ry="17" fill={hair} />
+      <path d={`M${x - 35} ${y + 8} q-14 16 0 30`} stroke={hair} strokeWidth="7" fill="none" strokeLinecap="round" />
+      <path d={`M${x + 35} ${y + 8} q14 16 0 30`} stroke={hair} strokeWidth="7" fill="none" strokeLinecap="round" />
+      <circle cx={x - 35} cy={y + 8} r="3.6" fill="#ff7e9f" />
+      <circle cx={x + 35} cy={y + 8} r="3.6" fill="#ff7e9f" />
+      <ellipse cx={x} cy={y - 2} rx="26" ry="28" fill={hair} />
+      <ellipse cx={x} cy={y + 3} rx="19" ry="25" fill={skin} />
+      <path d={`M${x - 21} ${y - 19} q21 -21 42 0 q-16 -8 -42 0`} fill={hair} />
+      <path d={`M${x - 12} ${y - 22} q6 14 -3 24 M${x + 3} ${y - 23} q5 14 -4 24`} stroke={hair} strokeWidth="3" fill="none" strokeLinecap="round" />
+      <circle cx={x - 8} cy={y + 2} r="2.3" fill="#2f2620" />
+      <circle cx={x + 8} cy={y + 2} r="2.3" fill="#2f2620" />
+      <path d={`M${x - 8} ${y + 17} q8 8 16 0`} stroke="#a14c00" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+      <path d={`M${x - 24} ${y + 57} q24 -31 48 0 v26 h-48z`} fill="#f7e6d0" />
+      <path d={`M${x - 21} ${y + 58} q-20 12 -34 32 M${x + 21} ${y + 58} q18 -2 34 -22`} stroke={skin} strokeWidth="7" fill="none" strokeLinecap="round" />
+      <path d={`M${x - 12} ${y + 80} l-18 31 M${x + 12} ${y + 80} l30 22`} stroke="#495057" strokeWidth="8" fill="none" strokeLinecap="round" />
+      <path d={`M${x - 42} ${y + 116} q38 12 82 0`} stroke="#343a40" strokeWidth="7" fill="none" strokeLinecap="round" />
+      <circle cx={x - 28} cy={y + 123} r="5" fill="#495057" />
+      <circle cx={x + 27} cy={y + 123} r="5" fill="#495057" />
+    </g>
+  );
 }
