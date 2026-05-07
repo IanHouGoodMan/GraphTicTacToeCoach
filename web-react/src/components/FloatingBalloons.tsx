@@ -14,7 +14,7 @@ type SceneMoment = {
 type Moment = QuoteMoment | SceneMoment;
 
 type PeopleKind = 'little' | 'sister' | 'mom' | 'mom-sister' | 'dad';
-type SceneKind = 'paris' | 'hokkaido' | 'osaka' | 'tokyo' | 'hiking' | 'english-class' | 'coding-night' | 'heidegger' | 'nietzsche' | 'hiphop' | 'skateboard';
+type SceneKind = 'paris' | 'hokkaido' | 'osaka' | 'tokyo' | 'hiking' | 'english-class' | 'coding-night' | 'heidegger' | 'nietzsche' | 'philosophy100' | 'life-book' | 'achang' | 'yugu-juan' | 'poetry-life' | 'suxin' | 'composition' | 'plant-lab' | 'math-wu' | 'three-hum' | 'ah-chang-ending' | 'yu-dafu-journey' | 'hiphop' | 'skateboard';
 
 type BalloonState = {
   id: number;
@@ -45,10 +45,23 @@ const moments: Moment[] = [
   { kind: 'scene', scene: 'coding-night' },
   { kind: 'scene', scene: 'heidegger' },
   { kind: 'scene', scene: 'nietzsche' },
+  { kind: 'scene', scene: 'philosophy100' },
+  { kind: 'scene', scene: 'life-book' },
+  { kind: 'scene', scene: 'achang' },
+  { kind: 'scene', scene: 'yugu-juan' },
+  { kind: 'scene', scene: 'poetry-life' },
+  { kind: 'scene', scene: 'suxin' },
+  { kind: 'scene', scene: 'composition' },
+  { kind: 'scene', scene: 'plant-lab' },
+  { kind: 'scene', scene: 'math-wu' },
+  { kind: 'scene', scene: 'three-hum' },
+  { kind: 'scene', scene: 'ah-chang-ending' },
+  { kind: 'scene', scene: 'yu-dafu-journey' },
   { kind: 'quote', text: '要认真读书', people: 'dad' },
   { kind: 'quote', text: '优秀', people: 'dad' },
   { kind: 'quote', text: '请阅读郁达夫', people: 'dad' },
   { kind: 'quote', text: '请阅读哲学', people: 'dad' },
+  { kind: 'quote', text: '阅读好的书，听到了人话，再次回到了温暖的人间', people: 'dad' },
   { kind: 'quote', text: '变形记', people: 'dad' },
   { kind: 'scene', scene: 'hiphop' },
   { kind: 'scene', scene: 'skateboard' }
@@ -360,8 +373,8 @@ function Scene({ scene }: { scene: SceneKind }) {
 }
 
 function sceneBackground(scene: SceneKind) {
-  if (scene === 'coding-night' || scene === 'heidegger' || scene === 'nietzsche') return '#1b263b';
-  if (scene === 'hokkaido') return '#e7f5ff';
+  if (scene === 'coding-night' || scene === 'heidegger' || scene === 'nietzsche' || isDadReadingScene(scene)) return '#1b263b';
+  if (scene === 'hokkaido' || scene === 'plant-lab') return '#e7f5ff';
   if (scene === 'hiking' || scene === 'skateboard') return '#eaf7ea';
   return '#fff3d6';
 }
@@ -386,6 +399,30 @@ function SceneBackdrop({ scene }: { scene: SceneKind }) {
       return <g><circle cx="198" cy="35" r="13" fill="#ffd43b" /><rect x="48" y="44" width="88" height="92" rx="6" fill="#f8f1e4" stroke="#d6c7a8" strokeWidth="3" /><text x="92" y="72" textAnchor="middle" fontSize="14" fontWeight="900" fill="#3a2c1f">Heidegger</text><text x="92" y="95" textAnchor="middle" fontSize="20" fontWeight="900" fill="#1864ab">Being</text><path d="M66 113 h52 M66 126 h38" stroke="#6b5a43" strokeWidth="4" strokeLinecap="round" opacity=".7" /><path d="M58 50 v82" stroke="#d6c7a8" strokeWidth="3" /></g>;
     case 'nietzsche':
       return <g><circle cx="198" cy="35" r="13" fill="#ffd43b" /><path d="M22 128 L76 58 L122 128 Z" fill="#495057" /><path d="M70 64 l8 23 l14 -23" fill="#f8f9fa" opacity=".9" /><rect x="54" y="44" width="92" height="92" rx="6" fill="#fff4d6" stroke="#d6c7a8" strokeWidth="3" /><text x="100" y="69" textAnchor="middle" fontSize="14" fontWeight="900" fill="#3a2c1f">Nietzsche</text><text x="100" y="94" textAnchor="middle" fontSize="18" fontWeight="900" fill="#c92a2a">OVERMAN</text><path d="M92 103 l-10 19 l18 -9 l-9 18 l24 -30" stroke="#ffd43b" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round" /><path d="M64 50 v82" stroke="#d6c7a8" strokeWidth="3" /></g>;
+    case 'philosophy100':
+      return <BookBackdrop lines={['哲学的', '100个基本']} accent="#74c0fc" />;
+    case 'life-book':
+      return <BookBackdrop lines={['WHAT DO', 'YOU WANT', 'OUT OF LIFE']} accent="#ffd43b" english />;
+    case 'achang':
+      return <BookBackdrop lines={['阿长与', '山海经']} accent="#ffb86b" />;
+    case 'yugu-juan':
+      return <BookBackdrop lines={['与古为徒', '娟娟发屋']} accent="#b197fc" />;
+    case 'poetry-life':
+      return <BookBackdrop lines={['人间烟火', '皆是诗']} accent="#95d5b2" />;
+    case 'suxin':
+      return <BookBackdrop lines={['苏辛词说']} accent="#ff7e9f" />;
+    case 'composition':
+      return <LittleBookBackdrop lines={['如何写好', '作文']} accent="#ffb86b" note="日本作者" />;
+    case 'plant-lab':
+      return <g><rect x="24" y="38" width="150" height="84" rx="8" fill="#f8f9fa" stroke="#74c0fc" strokeWidth="3" /><text x="99" y="60" textAnchor="middle" fontSize="14" fontWeight="900" fill="#1864ab">Plant Gene Edit</text><path d="M50 92 c16 -28 34 -28 50 0 c16 -28 34 -28 50 0" stroke="#845ef7" strokeWidth="4" fill="none" strokeLinecap="round" /><path d="M56 76 h16 M76 91 h16 M101 76 h16 M121 91 h16" stroke="#845ef7" strokeWidth="3" strokeLinecap="round" /><rect x="34" y="124" width="156" height="10" rx="4" fill="#adb5bd" /><path d="M54 124 v-26 M46 98 h16 M50 107 h8" stroke="#2b8a3e" strokeWidth="4" strokeLinecap="round" /><path d="M150 124 v-35 M136 99 q14 -20 28 0 M140 112 q10 -16 22 0" stroke="#2b8a3e" strokeWidth="4" fill="none" strokeLinecap="round" /><text x="72" y="145" textAnchor="middle" fontSize="14" fontWeight="900" fill="#2b8a3e">植物培育</text></g>;
+    case 'math-wu':
+      return <LittleBookBackdrop lines={['小学数学', '伍鸿熙']} accent="#74c0fc" note="UC Berkeley" thick />;
+    case 'three-hum':
+      return <g><rect x="38" y="42" width="100" height="86" rx="7" fill="#fff8df" stroke="#d6c7a8" strokeWidth="3" /><path d="M50 49 v74" stroke="#d6c7a8" strokeWidth="3" /><text x="89" y="69" textAnchor="middle" fontSize="16" fontWeight="900" fill="#3a2c1f">朝花夕拾</text><text x="89" y="94" textAnchor="middle" fontSize="15" fontWeight="900" fill="#a14c00">阿长</text><text x="89" y="115" textAnchor="middle" fontSize="15" fontWeight="900" fill="#a14c00">山海经</text><path d="M142 70 q18 -18 36 0 v29 q-18 18 -36 0z" fill="#fff" stroke="#d6336c" strokeWidth="3" /><text x="160" y="91" textAnchor="middle" fontSize="14" fontWeight="900" fill="#d6336c">三哼经</text><text x="70" y="146" textAnchor="middle" fontSize="14" fontWeight="900" fill="#d6336c">妹妹笑了</text></g>;
+    case 'ah-chang-ending':
+      return <g><rect x="36" y="40" width="106" height="92" rx="7" fill="#fff8df" stroke="#d6c7a8" strokeWidth="3" /><path d="M49 47 v80" stroke="#d6c7a8" strokeWidth="3" /><text x="89" y="64" textAnchor="middle" fontSize="15" fontWeight="900" fill="#3a2c1f">朝花夕拾</text><text x="89" y="86" textAnchor="middle" fontSize="13" fontWeight="900" fill="#a14c00">阿长与</text><text x="89" y="104" textAnchor="middle" fontSize="13" fontWeight="900" fill="#a14c00">山海经</text><path d="M65 119 h48" stroke="#6b5a43" strokeWidth="3" strokeLinecap="round" opacity=".55" /><path d="M154 66 q16 -18 32 0 q16 -18 32 0 q-8 27 -32 42 q-24 -15 -32 -42z" fill="#ffe3ec" stroke="#d6336c" strokeWidth="3" /><path d="M178 108 q-7 12 0 23 q8 -11 0 -23z" fill="#74c0fc" /><text x="76" y="146" textAnchor="middle" fontSize="14" fontWeight="900" fill="#d6336c">几乎要哭了</text></g>;
+    case 'yu-dafu-journey':
+      return <g><rect x="36" y="42" width="104" height="88" rx="7" fill="#fff8df" stroke="#d6c7a8" strokeWidth="3" /><path d="M49 49 v76" stroke="#d6c7a8" strokeWidth="3" /><text x="88" y="68" textAnchor="middle" fontSize="15" fontWeight="900" fill="#3a2c1f">郁达夫</text><text x="88" y="92" textAnchor="middle" fontSize="15" fontWeight="900" fill="#1864ab">远一程</text><text x="88" y="113" textAnchor="middle" fontSize="15" fontWeight="900" fill="#1864ab">再远一程</text><path d="M150 124 q18 -58 56 -76" stroke="#74c0fc" strokeWidth="6" fill="none" strokeLinecap="round" strokeDasharray="8 8" /><path d="M182 59 l25 -13 l-8 27" fill="none" stroke="#74c0fc" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" /><circle cx="205" cy="45" r="12" fill="#ffd43b" /><text x="78" y="146" textAnchor="middle" fontSize="14" fontWeight="900" fill="#1864ab">继续远行</text></g>;
     case 'hiphop':
       return <g><circle cx="190" cy="37" r="16" fill="#ffd43b" /><path d="M24 126 q40 -52 86 0 t98 0" fill="none" stroke="#b197fc" strokeWidth="8" strokeLinecap="round" /><text x="118" y="54" textAnchor="middle" fontSize="24" fontWeight="900" fill="#d6336c">HIPHOP</text><circle cx="82" cy="78" r="11" fill="none" stroke="#d6336c" strokeWidth="5" /><circle cx="150" cy="75" r="11" fill="none" stroke="#d6336c" strokeWidth="5" /><path d="M94 78 q26 -22 44 -2" stroke="#d6336c" strokeWidth="5" fill="none" strokeLinecap="round" /><text x="47" y="72" fontSize="22" fontWeight="900" fill="#845ef7">♪</text><text x="184" y="88" fontSize="20" fontWeight="900" fill="#845ef7">♫</text></g>;
     case 'skateboard':
@@ -393,14 +430,67 @@ function SceneBackdrop({ scene }: { scene: SceneKind }) {
   }
 }
 
+function BookBackdrop({ lines, accent, english = false }: { lines: string[]; accent: string; english?: boolean }) {
+  const fontSize = english ? 12 : lines.length === 1 ? 20 : 17;
+
+  return (
+    <g>
+      <circle cx="198" cy="35" r="13" fill="#ffd43b" />
+      <circle cx="193" cy="31" r="13" fill="#1b263b" />
+      <path d="M24 128 q50 -42 100 0 t94 0" fill="none" stroke={accent} strokeWidth="7" strokeLinecap="round" opacity=".45" />
+      <rect x="42" y="42" width="104" height="94" rx="7" fill="#fff8df" stroke="#d6c7a8" strokeWidth="3" />
+      <path d="M54 48 v82" stroke="#d6c7a8" strokeWidth="3" />
+      <rect x="64" y="56" width="64" height="60" rx="6" fill={accent} opacity=".18" />
+      {lines.map((line, index) => (
+        <text key={line} x="96" y={74 + index * (english ? 17 : 22)} textAnchor="middle" fontSize={fontSize} fontWeight="900" fill={english ? '#f8f9fa' : '#3a2c1f'}>
+          {line}
+        </text>
+      ))}
+      <path d="M70 122 h50" stroke="#6b5a43" strokeWidth="3" strokeLinecap="round" opacity=".55" />
+    </g>
+  );
+}
+
+function LittleBookBackdrop({ lines, accent, note, thick = false }: { lines: string[]; accent: string; note: string; thick?: boolean }) {
+  return (
+    <g>
+      <circle cx="198" cy="35" r="15" fill="#ffd43b" />
+      <path d="M24 132 h192" stroke="#d6c7a8" strokeWidth="8" strokeLinecap="round" />
+      {thick && <rect x="45" y="51" width="104" height="90" rx="7" fill="#d8e9ff" opacity=".65" />}
+      {thick && <rect x="40" y="47" width="104" height="90" rx="7" fill="#edf6ff" opacity=".85" />}
+      <rect x="34" y="42" width="104" height="90" rx="7" fill="#fff8df" stroke="#d6c7a8" strokeWidth="3" />
+      <path d="M47 48 v78" stroke="#d6c7a8" strokeWidth="3" />
+      <rect x="58" y="56" width="62" height="50" rx="6" fill={accent} opacity=".2" />
+      {lines.map((line, index) => (
+        <text key={line} x="89" y={76 + index * 24} textAnchor="middle" fontSize="18" fontWeight="900" fill="#3a2c1f">
+          {line}
+        </text>
+      ))}
+      {note === '日本作者' && <g><circle cx="90" cy="116" r="9" fill="#fff" stroke="#adb5bd" strokeWidth="1.5" /><circle cx="90" cy="116" r="4.3" fill="#e03131" /></g>}
+      <text x="89" y="126" textAnchor="middle" fontSize="11" fontWeight="900" fill="#6b5a43">{note}</text>
+    </g>
+  );
+}
+
+function isDadReadingScene(scene: SceneKind) {
+  return scene === 'philosophy100' || scene === 'life-book' || scene === 'achang' || scene === 'yugu-juan' || scene === 'poetry-life' || scene === 'suxin';
+}
+
+function isLittleReadingScene(scene: SceneKind) {
+  return scene === 'composition' || scene === 'math-wu' || scene === 'three-hum' || scene === 'ah-chang-ending' || scene === 'yu-dafu-journey';
+}
+
 function ScenePerson({ scene }: { scene: SceneKind }) {
-  if (scene === 'coding-night' || scene === 'heidegger' || scene === 'nietzsche') {
+  if (scene === 'coding-night' || scene === 'heidegger' || scene === 'nietzsche' || isDadReadingScene(scene)) {
     return <SinglePerson x={168} y={104} skin="#ffd8b5" hair="#2f2620" shirt="#f8f9fa" kind="dad" />;
+  }
+  if (scene === 'plant-lab') {
+    return <SinglePerson x={170} y={104} skin="#ffd8b5" hair="#2b2118" shirt="#dbeafe" kind="sister" />;
   }
   if (scene === 'hiking' || scene === 'english-class') {
     return <SinglePerson x={174} y={104} skin="#ffd8b5" hair="#3a2c1f" shirt={scene === 'hiking' ? '#ffb86b' : '#dbeafe'} kind="mom" />;
   }
-  if (scene === 'skateboard') {
+  if (scene === 'skateboard' || isLittleReadingScene(scene)) {
     return <SinglePerson x={134} y={96} skin="#ffd8b5" hair="#2f241c" shirt="#f7e6d0" kind="little" />;
   }
   return <SinglePerson x={170} y={104} skin="#ffd8b5" hair="#2b2118" shirt={scene === 'hiphop' ? '#b197fc' : '#ffd6e0'} kind="sister" />;
