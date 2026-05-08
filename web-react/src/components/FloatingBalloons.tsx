@@ -35,7 +35,7 @@ const moments: Moment[] = [
   { kind: 'quote', text: '春风沉醉的晚上，他从我读初二就开始讲，讲到现在', people: 'sister' },
   { kind: 'quote', text: '怎么有点扯，能从这个扯到那个？', people: 'mom-sister' },
   { kind: 'quote', text: '孩子的屁你都觉得是香的啦', people: 'mom' },
-  { kind: 'quote', text: '维特根斯坦，看了一半怎么只讲一个人，另一个人呢？', people: 'little' },
+  { kind: 'quote', text: '维特跟斯坦，看了一半怎么只讲一个人，另一个人呢？', people: 'little' },
   { kind: 'scene', scene: 'paris' },
   { kind: 'scene', scene: 'hokkaido' },
   { kind: 'scene', scene: 'osaka' },
@@ -200,6 +200,24 @@ export default function FloatingBalloons() {
         </aside>
       )}
     </div>
+  );
+}
+
+function LifeBookBackdrop() {
+  return (
+    <g>
+      <circle cx="198" cy="35" r="13" fill="#ffd43b" />
+      <circle cx="193" cy="31" r="13" fill="#1b263b" />
+      <path d="M24 128 q50 -42 100 0 t94 0" fill="none" stroke="#9ad9d1" strokeWidth="7" strokeLinecap="round" opacity=".55" />
+      <rect x="42" y="42" width="104" height="94" rx="7" fill="#d7f5e8" stroke="#d6c7a8" strokeWidth="3" />
+      <path d="M54 48 v82" stroke="#8ecfc3" strokeWidth="3" />
+      <rect x="64" y="56" width="64" height="60" rx="6" fill="#f7b7d2" opacity=".72" />
+      <path d="M68 60 h56 v18 h-56z" fill="#a9d6ff" opacity=".9" />
+      <text x="96" y="74" textAnchor="middle" fontSize="11" fontWeight="900" fill="#264653">WHAT DO</text>
+      <text x="96" y="91" textAnchor="middle" fontSize="11" fontWeight="900" fill="#264653">YOU WANT</text>
+      <text x="96" y="108" textAnchor="middle" fontSize="10" fontWeight="900" fill="#264653">OUT OF LIFE</text>
+      <path d="M70 122 h50" stroke="#6b5a43" strokeWidth="3" strokeLinecap="round" opacity=".55" />
+    </g>
   );
 }
 
@@ -391,7 +409,7 @@ function SceneBackdrop({ scene }: { scene: SceneKind }) {
     case 'hokkaido':
       return <g><path d="M0 110 q60 -55 120 0 t120 0 v60 h-240z" fill="#bde0fe" /><path d="M0 118 q65 -38 120 0 t120 0 v52 h-240z" fill="#ffffff" /><circle cx="198" cy="35" r="15" fill="#ffd43b" /><text x="90" y="145" textAnchor="middle" fontSize="16" fontWeight="900" fill="#1864ab">Hokkaido</text></g>;
     case 'osaka':
-      return <g><rect x="38" y="52" width="58" height="74" rx="8" fill="#f8f9fa" stroke="#6b4f1f" strokeWidth="3" /><path d="M32 57 h70 l-12 -20 h-46z" fill="#ffd97d" stroke="#6b4f1f" strokeWidth="3" /><circle cx="178" cy="72" r="30" fill="#ff6b6b" opacity=".25" /><circle cx="178" cy="72" r="20" fill="none" stroke="#c92a2a" strokeWidth="4" opacity=".65" /><circle cx="178" cy="72" r="8" fill="#ff8787" opacity=".9" /><text x="68" y="144" textAnchor="middle" fontSize="16" fontWeight="900" fill="#c92a2a">Osaka 大阪</text></g>;
+      return <g><rect x="38" y="52" width="58" height="74" rx="8" fill="#f8f9fa" stroke="#6b4f1f" strokeWidth="3" /><path d="M32 57 h70 l-12 -20 h-46z" fill="#ffd97d" stroke="#6b4f1f" strokeWidth="3" /><circle cx="178" cy="72" r="30" fill="#ff6b6b" opacity=".25" /><circle cx="178" cy="72" r="20" fill="none" stroke="#c92a2a" strokeWidth="4" opacity=".65" /><circle cx="178" cy="72" r="8" fill="#ff8787" opacity=".9" /><text x="68" y="144" textAnchor="middle" fontSize="16" fontWeight="900" fill="#c92a2a">Osaka</text></g>;
     case 'tokyo':
       return <g><circle cx="190" cy="35" r="15" fill="#ffd43b" /><path d="M55 126 L75 42 L95 126" fill="none" stroke="#e8590c" strokeWidth="7" strokeLinecap="round" /><path d="M45 78 h60 M38 106 h74" stroke="#e8590c" strokeWidth="5" strokeLinecap="round" /><rect x="144" y="78" width="52" height="48" fill="#bde0fe" stroke="#1864ab" strokeWidth="3" /><text x="75" y="145" textAnchor="middle" fontSize="17" fontWeight="900" fill="#e8590c">Tokyo</text></g>;
     case 'hiking':
@@ -407,11 +425,11 @@ function SceneBackdrop({ scene }: { scene: SceneKind }) {
     case 'philosophy100':
       return <BookBackdrop lines={['哲学的', '100个基本']} accent="#74c0fc" />;
     case 'life-book':
-      return <BookBackdrop lines={['WHAT DO', 'YOU WANT', 'OUT OF LIFE']} accent="#ffd43b" english />;
+      return <LifeBookBackdrop />;
     case 'achang':
       return <BookBackdrop lines={['阿长与', '山海经']} accent="#ffb86b" />;
     case 'yugu-juan':
-      return <BookBackdrop lines={['与古为徒', '娟娟发屋']} accent="#b197fc" />;
+      return <BookBackdrop lines={['与古为徒', '和娟娟发屋']} accent="#b197fc" />;
     case 'poetry-life':
       return <BookBackdrop lines={['人间烟火', '皆是诗']} accent="#95d5b2" />;
     case 'suxin':
@@ -419,7 +437,7 @@ function SceneBackdrop({ scene }: { scene: SceneKind }) {
     case 'composition':
       return <LittleBookBackdrop lines={['如何写好', '作文']} accent="#ffb86b" note="日本作者" />;
     case 'plant-lab':
-      return <g><rect x="24" y="38" width="150" height="84" rx="8" fill="#f8f9fa" stroke="#74c0fc" strokeWidth="3" /><text x="99" y="60" textAnchor="middle" fontSize="14" fontWeight="900" fill="#1864ab">Plant Gene Edit</text><path d="M50 92 c16 -28 34 -28 50 0 c16 -28 34 -28 50 0" stroke="#845ef7" strokeWidth="4" fill="none" strokeLinecap="round" /><path d="M56 76 h16 M76 91 h16 M101 76 h16 M121 91 h16" stroke="#845ef7" strokeWidth="3" strokeLinecap="round" /><rect x="34" y="124" width="156" height="10" rx="4" fill="#adb5bd" /><path d="M54 124 v-26 M46 98 h16 M50 107 h8" stroke="#2b8a3e" strokeWidth="4" strokeLinecap="round" /><path d="M150 124 v-35 M136 99 q14 -20 28 0 M140 112 q10 -16 22 0" stroke="#2b8a3e" strokeWidth="4" fill="none" strokeLinecap="round" /><text x="72" y="145" textAnchor="middle" fontSize="14" fontWeight="900" fill="#2b8a3e">植物培育</text></g>;
+      return <g><rect x="18" y="28" width="170" height="96" rx="9" fill="#f8f9fa" stroke="#74c0fc" strokeWidth="3" /><text x="94" y="49" textAnchor="middle" fontSize="13" fontWeight="900" fill="#1864ab">Forestry Lab</text><text x="151" y="49" textAnchor="middle" fontSize="11" fontWeight="900" fill="#845ef7">导师</text><path d="M42 82 c13 -24 28 -24 41 0 c13 -24 28 -24 41 0" stroke="#845ef7" strokeWidth="4" fill="none" strokeLinecap="round" /><path d="M48 67 h12 M64 82 h12 M88 67 h12" stroke="#845ef7" strokeWidth="3" strokeLinecap="round" /><path d="M104 82 h12" stroke="#e03131" strokeWidth="6" strokeLinecap="round" /><text x="124" y="83" fontSize="12" fontWeight="900" fill="#e03131">KO</text><rect x="32" y="105" width="46" height="18" rx="4" fill="#d8f3dc" stroke="#2b8a3e" strokeWidth="2" /><rect x="92" y="105" width="46" height="18" rx="4" fill="#ffe3e3" stroke="#e03131" strokeWidth="2" /><path d="M48 105 v-19 M42 91 q6 -14 14 0 M54 94 q8 -12 16 0 M108 105 v-14 M102 96 q6 -9 12 0" stroke="#2b8a3e" strokeWidth="3" fill="none" strokeLinecap="round" /><path d="M154 74 l16 -12 M154 82 h19 M154 90 l16 12" stroke="#6b5a43" strokeWidth="3" strokeLinecap="round" /><text x="76" y="145" textAnchor="middle" fontSize="13" fontWeight="900" fill="#2b8a3e">敲掉基因 · 培育观察</text></g>;
     case 'math-wu':
       return <LittleBookBackdrop lines={['小学数学', '伍鸿熙']} accent="#74c0fc" note="UC Berkeley" thick />;
     case 'three-hum':
@@ -433,7 +451,7 @@ function SceneBackdrop({ scene }: { scene: SceneKind }) {
     case 'mom-cooking':
       return <g><rect x="28" y="42" width="130" height="78" rx="10" fill="#fff" stroke="#d6c7a8" strokeWidth="3" /><rect x="44" y="88" width="78" height="46" rx="6" fill="#adb5bd" /><circle cx="68" cy="104" r="10" fill="#495057" opacity=".85" /><circle cx="98" cy="104" r="10" fill="#495057" opacity=".85" /><rect x="68" y="74" width="48" height="24" rx="7" fill="#ffd8a8" stroke="#8a6a3a" strokeWidth="3" /><path d="M75 71 h34" stroke="#8a6a3a" strokeWidth="4" strokeLinecap="round" /><path d="M78 66 q-8 -14 3 -24 M96 66 q-8 -14 3 -24 M112 66 q-8 -14 3 -24" stroke="#ced4da" strokeWidth="4" fill="none" strokeLinecap="round" /><text x="70" y="148" textAnchor="middle" fontSize="15" fontWeight="900" fill="#d9480f">妈妈做饭</text></g>;
     case 'mom-roses':
-      return <g><path d="M30 127 h180" stroke="#d6c7a8" strokeWidth="8" strokeLinecap="round" /><rect x="28" y="56" width="58" height="70" rx="6" fill="#fff" stroke="#8a6a3a" strokeWidth="3" /><path d="M42 56 v70 M72 56 v70" stroke="#d6c7a8" strokeWidth="2" /><path d="M124 124 l36 -58 M132 128 l47 -56 M140 129 l59 -45" stroke="#2b8a3e" strokeWidth="4" strokeLinecap="round" /><circle cx="161" cy="63" r="8" fill="#e03131" /><circle cx="180" cy="70" r="8" fill="#f03e3e" /><circle cx="199" cy="82" r="8" fill="#c2255c" /><path d="M151 82 q13 -12 26 0 M165 95 q12 -11 24 0" stroke="#2b8a3e" strokeWidth="3" fill="none" strokeLinecap="round" /><text x="76" y="148" textAnchor="middle" fontSize="14" fontWeight="900" fill="#c2255c">买玫瑰回家</text></g>;
+      return <g><path d="M30 127 h180" stroke="#d6c7a8" strokeWidth="8" strokeLinecap="round" /><rect x="28" y="56" width="58" height="70" rx="6" fill="#fff" stroke="#8a6a3a" strokeWidth="3" /><path d="M42 56 v70 M72 56 v70" stroke="#d6c7a8" strokeWidth="2" /><circle cx="58" cy="92" r="3" fill="#8a6a3a" /><text x="76" y="148" textAnchor="middle" fontSize="14" fontWeight="900" fill="#c2255c">手拿玫瑰回家</text></g>;
     case 'hiphop':
       return <g><circle cx="190" cy="37" r="16" fill="#ffd43b" /><path d="M24 126 q40 -52 86 0 t98 0" fill="none" stroke="#b197fc" strokeWidth="8" strokeLinecap="round" /><text x="118" y="54" textAnchor="middle" fontSize="24" fontWeight="900" fill="#d6336c">HIPHOP</text><circle cx="82" cy="78" r="11" fill="none" stroke="#d6336c" strokeWidth="5" /><circle cx="150" cy="75" r="11" fill="none" stroke="#d6336c" strokeWidth="5" /><path d="M94 78 q26 -22 44 -2" stroke="#d6336c" strokeWidth="5" fill="none" strokeLinecap="round" /><text x="47" y="72" fontSize="22" fontWeight="900" fill="#845ef7">♪</text><text x="184" y="88" fontSize="20" fontWeight="900" fill="#845ef7">♫</text></g>;
     case 'skateboard':
@@ -502,7 +520,7 @@ function ScenePerson({ scene }: { scene: SceneKind }) {
     return <SinglePerson x={170} y={104} skin="#ffd8b5" hair="#2b2118" shirt="#dbeafe" kind="sister" />;
   }
   if (scene === 'hiking' || scene === 'english-class' || scene === 'mom-cooking' || scene === 'mom-roses') {
-    return <SinglePerson x={174} y={104} skin="#ffd8b5" hair="#3a2c1f" shirt={scene === 'hiking' ? '#ffb86b' : scene === 'english-class' ? '#dbeafe' : '#212529'} kind="mom" roleProps={scene === 'english-class'} />;
+    return <g><SinglePerson x={174} y={104} skin="#ffd8b5" hair="#3a2c1f" shirt={scene === 'hiking' ? '#ffb86b' : scene === 'english-class' ? '#dbeafe' : '#212529'} kind="mom" roleProps={scene === 'english-class'} />{scene === 'mom-roses' && <HeldRoses />}</g>;
   }
   if (scene === 'skateboard') {
     return <SkaterLittlePerson />;
@@ -511,6 +529,19 @@ function ScenePerson({ scene }: { scene: SceneKind }) {
     return <SinglePerson x={134} y={96} skin="#ffd8b5" hair="#2f241c" shirt="#f7e6d0" kind="little" />;
   }
   return <SinglePerson x={170} y={104} skin="#ffd8b5" hair="#2b2118" shirt={scene === 'hiphop' ? '#b197fc' : '#ffd6e0'} kind="sister" />;
+}
+
+function HeldRoses() {
+  return (
+    <g>
+      <path d="M142 116 l-18 -32 M147 118 l-9 -39 M153 119 l6 -38" stroke="#2b8a3e" strokeWidth="4" strokeLinecap="round" />
+      <circle cx="124" cy="80" r="7" fill="#e03131" />
+      <circle cx="139" cy="77" r="7" fill="#f03e3e" />
+      <circle cx="160" cy="78" r="7" fill="#c2255c" />
+      <path d="M128 96 q10 -9 20 0 M144 95 q10 -9 20 0" stroke="#2b8a3e" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <path d="M137 119 q7 7 18 0" stroke="#ffd8b5" strokeWidth="7" fill="none" strokeLinecap="round" />
+    </g>
+  );
 }
 
 function SkaterLittlePerson() {
