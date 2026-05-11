@@ -30,7 +30,7 @@ function citySun(x: number, y: number, color = '#f59e0b') {
   return <circle cx={x} cy={y} r="16" fill={color} opacity="0.9" />;
 }
 
-const scenes: Scene[] = [
+export const scenes: Scene[] = [
   {
     key: 'skateboard',
     title: '滑滑板',

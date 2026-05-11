@@ -9,6 +9,7 @@ import LeibnizStoryPage from './pages/LeibnizStoryPage';
 import ConceptsPage from './pages/ConceptsPage';
 import WolfGoatPage from './pages/WolfGoatPage';
 import WaterJugPage from './pages/WaterJugPage';
+import GuessArtPage from './pages/GuessArtPage';
 import FloatingBalloons from './components/FloatingBalloons';
 
 const NAV = [
@@ -20,6 +21,7 @@ const NAV = [
   { to: '/river', label: '过河问题' },
   { to: '/wolf-goat', label: '狼羊白菜' },
   { to: '/water-jug', label: '倒水问题' },
+  { to: '/guess', label: '我画你猜' },
   { to: '/leibniz', label: '可计算的思想' },
   { to: '/concepts', label: '术语地图' }
 ];
@@ -63,6 +65,7 @@ export default function App() {
             <Route path="/concepts" element={<ConceptsPage />} />
             <Route path="/wolf-goat" element={<WolfGoatPage />} />
             <Route path="/water-jug" element={<WaterJugPage />} />
+            <Route path="/guess" element={<GuessArtPage />} />
           </Routes>
         </div>
       </main>

@@ -292,4 +292,4 @@ export function BfsWaveVisualizer({ nodes, layers, edges, isGoal, title }: Props
     </div>
   );
 }
-
+

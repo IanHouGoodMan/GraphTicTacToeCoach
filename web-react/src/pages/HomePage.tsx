@@ -1,10 +1,9 @@
 import { Link } from 'react-router-dom';
-import RandomGeometryCard from '../components/RandomGeometryCard';
 
 export default function HomePage() {
   return (
     <>
-      <section className="hero home-hero">
+      <section className="hero">
         <div className="hero-copy">
           <p className="eyebrow">给爱思考的小朋友</p>
           <h1>把故事、游戏和城市，变成可以推理的数学。</h1>
@@ -17,7 +16,6 @@ export default function HomePage() {
             <Link className="btn outline" to="/basics">从点和边开始</Link>
           </div>
         </div>
-        <RandomGeometryCard />
       </section>
 
       <section className="card-grid">
@@ -58,6 +56,11 @@ export default function HomePage() {
           <h3>🪣 倒水问题 · 量出 4 升水</h3>
           <p>一个 3 升壶 + 一个 5 升壶，没有刻度。能量出恰好 4 升吗？用 BFS 搜遍所有倒法，还藏着一个数论秘密。</p>
           <p><Link to="/water-jug">去倒水 →</Link></p>
+        </article>
+        <article className="card">
+          <h3>🎨 我画你猜 · 几何卡通认图</h3>
+          <p>随机出现一幅简笔画：风景、人物、植物……从四个选项里选出你觉得画的是什么，答对加分，马上挑战下一幅！</p>
+          <p><Link to="/guess">去猜一猜 →</Link></p>
         </article>
         <article className="card">
           <h3>🔢 数论启蒙 · 从整除开始</h3>
