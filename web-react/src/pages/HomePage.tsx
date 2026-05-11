@@ -43,6 +43,16 @@ export default function HomePage() {
           <p><Link to="/river">去过河 →</Link></p>
         </article>
         <article className="card">
+          <h3>🐺 狼·羊·白菜 · 经典 BFS 谜题</h3>
+          <p>农夫要把狼、羊、白菜都带过河，但狼和羊、羊和白菜都不能单独在一起。只需 7 步，BFS 找到最短解。</p>
+          <p><Link to="/wolf-goat">去过河 →</Link></p>
+        </article>
+        <article className="card">
+          <h3>🪣 倒水问题 · 量出 4 升水</h3>
+          <p>一个 3 升壶 + 一个 5 升壶，没有刻度。能量出恰好 4 升吗？用 BFS 搜遍所有倒法，还藏着一个数论秘密。</p>
+          <p><Link to="/water-jug">去倒水 →</Link></p>
+        </article>
+        <article className="card">
           <h3>🔢 数论启蒙 · 从整除开始</h3>
           <p>数论很适合优秀的三年级孩子前瞻接触：奇偶、倍数、余数、质数，都能用游戏和证明来学，不必停留在算术速度。</p>
         </article>

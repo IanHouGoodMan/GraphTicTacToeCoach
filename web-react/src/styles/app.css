@@ -512,3 +512,88 @@ body {
   .balloon-pop-card { animation: none; }
 }
 
+/* ===== Button size variant ===== */
+.btn-sm { padding: .3rem .65rem; font-size: .82rem; }
+
+/* ===== Success banner ===== */
+.success-banner {
+  background: linear-gradient(135deg, #ebfbee, #d3f9d8);
+  border: 1px solid #69db7c; border-radius: 12px;
+  padding: .75rem 1rem; font-weight: 700; color: #2b8a3e;
+  margin: .6rem 0;
+}
+
+/* ===== Move pills ===== */
+.move-pills { display: flex; flex-wrap: wrap; gap: .5rem; }
+.move-pills-col { flex-direction: column; align-items: flex-start; }
+.btn.accent { background: linear-gradient(135deg, #6366f1, #4f46e5); color: #fff; }
+
+/* ===== Game controls ===== */
+.game-controls { display: flex; gap: .5rem; margin-top: .6rem; }
+
+/* ===== BFS Wave Visualizer ===== */
+.bfs-visualizer {
+  background: #f8faff; border: 1px solid #e0e7ff;
+  border-radius: 14px; padding: .75rem; margin: .5rem 0;
+}
+.bfs-title { font-weight: 800; font-size: .95rem; color: #4f46e5; margin: 0 0 .5rem; }
+.bfs-status-bar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-bottom: .5rem;
+}
+.bfs-wave-badge {
+  display: inline-flex; align-items: center; gap: .3rem;
+  padding: .2rem .65rem; border-radius: 999px;
+  background: #e0e7ff; color: #4f46e5; font-weight: 800; font-size: .85rem;
+}
+.bfs-stat { font-size: .82rem; color: #64748b; }
+.bfs-goal-found {
+  padding: .2rem .65rem; border-radius: 999px;
+  background: #fef3c7; color: #d97706; font-weight: 800; font-size: .82rem;
+}
+.bfs-canvas-wrap {
+  background: #fff; border: 1px solid #e0e7ff; border-radius: 10px;
+  overflow: auto; min-height: 120px; margin-bottom: .5rem;
+}
+.bfs-canvas-wrap svg { width: 100%; height: auto; display: block; }
+.bfs-controls { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; }
+.bfs-progress { flex: 1; min-width: 120px; }
+
+/* ===== Wolf-Goat-Cabbage page ===== */
+.wgc-scene {
+  display: grid; grid-template-columns: 1fr 120px 1fr; gap: .5rem;
+  background: linear-gradient(180deg, #e3f6ff 0%, #bde0fe 100%);
+  border-radius: 14px; padding: .8rem; margin: .6rem 0;
+}
+.wgc-bank {
+  background: #f7e5b8; border-radius: 10px; padding: .6rem;
+  display: flex; flex-direction: column; gap: .3rem; min-height: 80px;
+}
+.wgc-bank-label { font-weight: 800; color: #6b4f1f; font-size: .85rem; }
+.wgc-icons { display: flex; flex-wrap: wrap; gap: .3rem; font-size: 1.5rem; }
+.wgc-icon { line-height: 1; }
+.wgc-empty { font-size: .8rem; color: #999; }
+.wgc-river {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .4rem;
+}
+.wgc-river-label { font-size: .75rem; color: #1d6fa4; font-weight: 700; }
+.wgc-boat { font-size: .85rem; font-weight: 700; color: #1d6fa4; background: rgba(255,255,255,.7); border-radius: 8px; padding: .3rem .5rem; }
+.wgc-moves { margin: .6rem 0; }
+
+/* ===== Water Jug page ===== */
+.jug-scene {
+  display: flex; gap: 2rem; justify-content: center; align-items: flex-end;
+  padding: .8rem; background: #f0f4ff; border-radius: 14px; margin: .6rem 0;
+}
+.jug-wrap { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
+.jug-label { font-weight: 700; font-size: .85rem; color: #4f46e5; }
+.jug-moves { margin: .6rem 0; }
+.jug-grid-wrap { overflow-x: auto; margin: .5rem 0; }
+.jug-grid { border-collapse: collapse; font-size: .82rem; }
+.jug-grid th, .jug-grid td { border: 1px solid #e0e7ff; padding: .25rem .45rem; text-align: center; min-width: 42px; }
+.jug-grid th { background: #e0e7ff; color: #4f46e5; font-weight: 800; }
+.jug-cell { color: #94a3b8; }
+.jug-start { background: #dbeafe !important; color: #1d4ed8 !important; font-weight: 700; }
+.jug-goal { background: #fef3c7 !important; color: #d97706 !important; font-weight: 700; }
+.jug-visited { background: #ede9fe !important; color: #6d28d9 !important; }
+.jug-current { background: #fee2e2 !important; color: #b91c1c !important; font-weight: 900; font-size: 1rem; }
+

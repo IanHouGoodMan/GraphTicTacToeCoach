@@ -7,6 +7,8 @@ import EulerPracticePage from './pages/EulerPracticePage';
 import RiverCrossingPage from './pages/RiverCrossingPage';
 import LeibnizStoryPage from './pages/LeibnizStoryPage';
 import ConceptsPage from './pages/ConceptsPage';
+import WolfGoatPage from './pages/WolfGoatPage';
+import WaterJugPage from './pages/WaterJugPage';
 import FloatingBalloons from './components/FloatingBalloons';
 
 const NAV = [
@@ -16,6 +18,8 @@ const NAV = [
   { to: '/vs-computer', label: '🧠 算法对战' },
   { to: '/euler', label: '✏️ 一笔画练习' },
   { to: '/river', label: '🚣 过河问题' },
+  { to: '/wolf-goat', label: '🐺 狼羊白菜' },
+  { to: '/water-jug', label: '🪣 倒水问题' },
   { to: '/leibniz', label: '💡 可计算的思想' },
   { to: '/concepts', label: '📚 术语地图' }
 ];
@@ -54,6 +58,8 @@ export default function App() {
             <Route path="/river" element={<RiverCrossingPage />} />
             <Route path="/leibniz" element={<LeibnizStoryPage />} />
             <Route path="/concepts" element={<ConceptsPage />} />
+            <Route path="/wolf-goat" element={<WolfGoatPage />} />
+            <Route path="/water-jug" element={<WaterJugPage />} />
           </Routes>
         </div>
       </main>
