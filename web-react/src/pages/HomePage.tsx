@@ -1,16 +1,23 @@
 import { Link } from 'react-router-dom';
+import RandomGeometryCard from '../components/RandomGeometryCard';
 
 export default function HomePage() {
   return (
     <>
-      <section className="hero">
-        <p className="eyebrow">给爱思考的小朋友</p>
-        <h1>欢迎来到数学园地 ✨</h1>
-        <p className="lead">
-          这里不是把孩子提前推进刷题，而是父女一起练一种很重要的本领：
-          <strong>把看起来不像计算题的问题，先变成对象、关系、状态、路径和规则，再慢慢推理。</strong>
-          现在先从图论起步，后面也可以加入数论、分数和更多适合动手探索的数学主题。
-        </p>
+      <section className="hero home-hero">
+        <div className="hero-copy">
+          <p className="eyebrow">给爱思考的小朋友</p>
+          <h1>把故事、游戏和城市，变成可以推理的数学。</h1>
+          <p className="lead">
+            这里不是把孩子提前推进刷题，而是父女一起练一种很重要的本领：
+            <strong>把看起来不像计算题的问题，先变成对象、关系、状态、路径和规则，再慢慢推理。</strong>
+          </p>
+          <div className="hero-actions">
+            <Link className="btn primary" to="/river">探索 BFS</Link>
+            <Link className="btn outline" to="/basics">从点和边开始</Link>
+          </div>
+        </div>
+        <RandomGeometryCard />
       </section>
 
       <section className="card-grid">

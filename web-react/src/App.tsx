@@ -12,16 +12,16 @@ import WaterJugPage from './pages/WaterJugPage';
 import FloatingBalloons from './components/FloatingBalloons';
 
 const NAV = [
-  { to: '/', label: '🏠 首页', end: true },
-  { to: '/basics', label: '📐 图论基础' },
-  { to: '/proofs', label: '🔎 数学证明' },
-  { to: '/vs-computer', label: '🧠 算法对战' },
-  { to: '/euler', label: '✏️ 一笔画练习' },
-  { to: '/river', label: '🚣 过河问题' },
-  { to: '/wolf-goat', label: '🐺 狼羊白菜' },
-  { to: '/water-jug', label: '🪣 倒水问题' },
-  { to: '/leibniz', label: '💡 可计算的思想' },
-  { to: '/concepts', label: '📚 术语地图' }
+  { to: '/', label: '首页', end: true },
+  { to: '/basics', label: '图论基础' },
+  { to: '/proofs', label: '数学证明' },
+  { to: '/vs-computer', label: '算法对战' },
+  { to: '/euler', label: '一笔画' },
+  { to: '/river', label: '过河问题' },
+  { to: '/wolf-goat', label: '狼羊白菜' },
+  { to: '/water-jug', label: '倒水问题' },
+  { to: '/leibniz', label: '可计算的思想' },
+  { to: '/concepts', label: '术语地图' }
 ];
 
 export default function App() {
@@ -32,7 +32,10 @@ export default function App() {
         <NavLink to="/leibniz"> 看历史故事 →</NavLink>
       </div>
       <header className="topbar">
-        <div className="brand">📐 数学园地</div>
+        <NavLink className="brand" to="/" end>
+          <span className="brand-mark">Math</span>
+          <span className="brand-text">数学园地</span>
+        </NavLink>
         <nav className="nav">
           {NAV.map((n) => (
             <NavLink
