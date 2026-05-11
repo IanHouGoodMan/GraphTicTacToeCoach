@@ -1,12 +1,12 @@
-// 过河问题（传教士与野人 / 大人与小朋友）状态图引擎
+// 过河问题（传教士与野人）状态图引擎
 // 把现实问题变成「图」：每个合法状态 = 一个点；每个合法的一次划船 = 一条边。
 
 export type Side = 'L' | 'R';
 
 export interface State {
-  // 左岸的大人 / 小朋友数量
-  lb: number; // left bigs (0..3)
-  lk: number; // left kids (0..3)
+  // 左岸的传教士 / 野人数量
+  lb: number; // left missionaries (0..3)
+  lk: number; // left cannibals (0..3)
   boat: Side; // 船现在停在哪一岸
 }
 
@@ -22,7 +22,7 @@ export function rk(s: State): number { return TOTAL_KID - s.lk; } // right kids
 
 export function key(s: State): string { return `${s.lb}-${s.lk}-${s.boat}`; }
 
-/** 一岸合法的判定：若该岸还有大人，则小朋友数量不能超过大人数量。 */
+/** 一岸合法的判定：若该岸还有传教士，则野人数量不能超过传教士数量。 */
 export function sideOk(bigs: number, kids: number): boolean {
   if (bigs < 0 || kids < 0) return false;
   if (bigs > TOTAL_BIG || kids > TOTAL_KID) return false;

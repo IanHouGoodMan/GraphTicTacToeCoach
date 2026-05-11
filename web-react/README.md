@@ -1,6 +1,6 @@
-# 图论小课堂 — React + TypeScript 前端
+# 数学园地 — React + TypeScript 前端
 
-面向小学三年级（适当前瞻）的图论学习 Web 应用。
+面向小学三年级（适当前瞻）的数学学习 Web 应用。当前从图论起步，后续可加入数论、分数等适合抽象思考的主题。
 
 ## 内容
 
@@ -29,7 +29,7 @@ npm run build
 
 ## 部署到 Azure Static Web Apps
 
-站内产品名保持为：`图论小课堂`。
+站内产品名保持为：`数学园地`。
 
 如果希望网址中包含 `ianhou`、`图论/graph`、`teaching/教学`、`love-kids/爱小朋友`，应通过 **Azure Static Web Apps 自定义域名** 来实现，而不是把这些字样放进首页标题。
 

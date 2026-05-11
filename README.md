@@ -1,6 +1,6 @@
-# 图论小课堂（React + TypeScript）
+# 数学园地（React + TypeScript）
 
-这是一个面向孩子的图论学习 Web 应用，当前只保留 React + TypeScript 前端工程。
+这是一个面向孩子的数学学习 Web 应用，当前从图论内容起步，后续可扩展到数论、分数等主题。
 
 ## 本地运行
 

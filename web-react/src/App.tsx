@@ -24,11 +24,11 @@ export default function App() {
   return (
     <div className="app-shell">
       <div className="leibniz-banner" title="莱布尼茨的梦想：把推理变成计算">
-        <em>Calculemus!</em> 让我们来计算吧。Let us calculate. · 用图论先建模，才让问题变得可计算。
+        <em>Calculemus!</em> 让我们来计算吧。Let us calculate. · 从图论起步，把问题变成可以思考、可以验证的数学。
         <NavLink to="/leibniz"> 看历史故事 →</NavLink>
       </div>
       <header className="topbar">
-        <div className="brand">📐 图论小课堂</div>
+        <div className="brand">📐 数学园地</div>
         <nav className="nav">
           {NAV.map((n) => (
             <NavLink
@@ -58,7 +58,7 @@ export default function App() {
         </div>
       </main>
 
-      <footer className="page-footer">图论小课堂 · 用图论玩转小学数学</footer>
+      <footer className="page-footer">数学园地 · 从图论、数论和游戏题里学会抽象思考</footer>
       <FloatingBalloons />
     </div>
   );

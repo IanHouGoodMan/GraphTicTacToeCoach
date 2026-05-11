@@ -6,14 +6,25 @@ import {
   shortestPath, tryMove, type State
 } from '../engine/riverCrossing';
 
-// 大人和小朋友过河
+// 传教士与野人过河
 // - 一条小船最多坐 2 个人
-// - 任何一岸如果有大人，「小朋友的人数」就不能超过「大人的人数」（小朋友太多会调皮）
+// - 任何一岸如果有传教士，「野人的人数」就不能超过「传教士的人数」
 // - 目标：把所有人都送到右岸
 
 export default function RiverCrossingPage() {
   const graph = useMemo(() => buildGraph(), []);
   const optimal = useMemo(() => shortestPath(graph) ?? [], [graph]);
+  const optimalMoves = useMemo(() => {
+    return optimal.slice(1).map((next, index) => {
+      const prev = optimal[index];
+      return {
+        b: Math.abs(prev.lb - next.lb),
+        k: Math.abs(prev.lk - next.lk),
+        from: prev.boat === 'L' ? '左岸' : '右岸',
+        to: next.boat === 'L' ? '左岸' : '右岸'
+      };
+    });
+  }, [optimal]);
 
   const [history, setHistory] = useState<State[]>([initialState]);
   const [boatSel, setBoatSel] = useState<{ b: number; k: number }>({ b: 0, k: 0 });
@@ -63,7 +74,7 @@ export default function RiverCrossingPage() {
     }
     const next = tryMove(current, boatSel.b, boatSel.k);
     if (!next) {
-      setMessage({ kind: 'bad', text: '这么走完之后，会有一岸的「小朋友比大人还多」，不行哦～' });
+      setMessage({ kind: 'bad', text: '这么走完之后，会有一岸的「野人比传教士还多」，不行哦～' });
       return;
     }
     setHistory([...history, next]);
@@ -75,16 +86,36 @@ export default function RiverCrossingPage() {
     <>
       <section className="hero">
         <p className="eyebrow">第 4 课 · 把生活问题变成图</p>
-        <h1>过河问题：3 个大人 + 3 个小朋友 🚣</h1>
+        <h1>传教士与野人过河 🚣</h1>
         <p className="lead">
-          有 3 个<strong>大人</strong>和 3 个<strong>小朋友</strong>要过河，只有一条小船，
+          有 3 个<strong>传教士</strong>和 3 个<strong>野人</strong>要过河，只有一条小船，
           最多坐 <strong>{BOAT_CAP}</strong> 个人。规则：
-          <strong>任何一岸只要有大人，小朋友的人数就不能超过大人</strong>
-          （否则小朋友会闹翻天 🙈）。船每次至少要 1 个人划。
+          <strong>任何一岸只要有传教士，野人的人数就不能超过传教士</strong>
+          （否则传教士会有危险）。船每次至少要 1 个人划。
         </p>
         <p className="lead">
-          这是一个非常经典的「<Link to="/concepts#modeling">把现实问题变成图</Link>」的例子：每一种「左岸有几个大人、几个小朋友、船在哪边」就是一张「状态卡」，
+          这是一个非常经典的「<Link to="/concepts#modeling">把现实问题变成图</Link>」的例子：每一种「左岸有几个传教士、几个野人、船在哪边」就是一张「状态卡」，
           一次合法的划船就把这张卡连到下一张卡。问题就变成「从开局这张卡，沿着边走到目标卡」。
+        </p>
+        <p className="proof-note">
+          这个经典谜题在大学的数据结构、算法分析和人工智能课程里，常被称作“传教士与野人问题”
+          （Missionaries and Cannibals）。更早的历史版本还包括“吃醋的丈夫”一类过河谜题；
+          这里采用大学教材里更常见的名字，但重点不是故事本身，而是学习怎样把故事变成状态图。
+        </p>
+      </section>
+
+      <section className="panel">
+        <h2>先把题目读清楚</h2>
+        <ul>
+          <li>开局是：左岸有 3 个传教士、3 个野人，右岸没人，船在左岸。</li>
+          <li>每一步只做一件事：让 1 个人或 2 个人坐船，从船所在的这一岸划到另一岸。</li>
+          <li>检查规则时，要同时看两岸。只要某一岸还有传教士，野人数量就不能比传教士多。</li>
+          <li>如果某一岸没有传教士了，比如 0 个传教士 + 2 个野人，这是允许的，因为只有野人的岸不会发生“吃掉传教士”的问题。</li>
+        </ul>
+        <p className="lead">
+          所以像「2 个传教士 + 3 个野人在同一岸」是<strong>违规状态</strong>，不能出现；
+          但「0 个传教士 + 3 个野人在同一岸」是<strong>合法状态</strong>。
+          这也是这道题最容易绕住人的地方。
         </p>
       </section>
 
@@ -99,12 +130,12 @@ export default function RiverCrossingPage() {
             </p>
             <div className="river-counter">
               <button className="btn outline" onClick={() => adjustBoat('b', -1)} disabled={boatSel.b === 0}>−</button>
-              <span>👨 大人 × {boatSel.b}</span>
+              <span>🧑‍🏫 传教士 × {boatSel.b}</span>
               <button className="btn outline" onClick={() => adjustBoat('b', +1)}>+</button>
             </div>
             <div className="river-counter">
               <button className="btn outline" onClick={() => adjustBoat('k', -1)} disabled={boatSel.k === 0}>−</button>
-              <span>🧒 小朋友 × {boatSel.k}</span>
+              <span>🧑 野人 × {boatSel.k}</span>
               <button className="btn outline" onClick={() => adjustBoat('k', +1)}>+</button>
             </div>
             <div className="actions">
@@ -144,16 +175,20 @@ export default function RiverCrossingPage() {
       <section className="panel">
         <h2>🗺️ 完整状态图（图论怎么看这个问题）</h2>
         <p className="lead">
-          下面这张大图是<strong>所有合法状态</strong>。每个圆圈是一种「左岸有几个大人/几个小朋友 + 船在哪」，
+          下面这张大图是<strong>所有合法状态</strong>。每个圆圈是一种「左岸有几个传教士/几个野人 + 船在哪」，
           有连线表示「划一次船就能从一边到另一边」。
           蓝色圆是 <strong>开局</strong>，金色圆是 <strong>目标</strong>。
           你<strong>已经走过的路径</strong>用橘色高亮，<strong>最优最短路径</strong>是 11 步，用淡绿色描出来作参考。
         </p>
         <StateGraphView graph={graph} history={history} optimal={optimal} />
         <p className="proof-note" style={{ marginTop: '.6rem' }}>
-          💡 想一想：本来「3 个大人 + 3 个小朋友 + 一条船」听起来很复杂，可是一旦把「状态」画成点、把「划船」画成边，
+          💡 想一想：本来「3 个传教士 + 3 个野人 + 一条船」听起来很复杂，可是一旦把「状态」画成点、把「划船」画成边，
           它就变成一个我们熟悉的<Link to="/concepts#shortest-path">找最短路径</Link>的图论问题了。这就是数学家解决问题的常用招数：
           <strong>给问题换个表示方式</strong>。
+        </p>
+        <p className="proof-note">
+          小挑战：先别看答案，试着只从开局出发，列出<strong>1 步</strong>能到的所有合法状态；
+          再从这些状态继续列出<strong>2 步</strong>能到的合法状态。你正在做的，就是广度优先遍历。
         </p>
       </section>
 
@@ -170,6 +205,32 @@ export default function RiverCrossingPage() {
           这道题展示的正是 <Link to="/leibniz">Calculemus</Link> 的精神：
           把「过河怎么走」写成状态图，让数学帮我们一步步检查、一步步算清楚。
         </p>
+
+        <h3>这是不是用广度优先遍历图来解决？</h3>
+        <p className="lead">
+          对，就是 BFS，也叫<strong>广度优先搜索 / 广度优先遍历</strong>。做法像一圈一圈扩大的水波：
+          先找开局 1 步能到哪些状态，再找 2 步能到哪些状态，再找 3 步能到哪些状态。
+          因为每次划船都算 1 步，所以 BFS 第一次碰到目标时，走的一定是最少步数。
+        </p>
+        <ul>
+          <li>把每张状态卡当成一个点。</li>
+          <li>把每一次合法划船当成一条边。</li>
+          <li>从开局点开始一层一层往外看。</li>
+          <li>第一次看见目标点，就知道最少要划几次船。</li>
+        </ul>
+
+        <h3>一条最短解，为什么是 11 步？</h3>
+        <p className="lead">
+          电脑把所有合法状态连成图后，用 BFS 一层一层找，第一次走到目标时正好是第 11 步，
+          所以这不是“碰巧试出来”的答案，而是已经验证过的最短解。
+        </p>
+        <ol>
+          {optimalMoves.map((move, index) => (
+            <li key={index}>
+              从 <strong>{move.from}</strong>带 <strong>{move.b}</strong> 个传教士和 <strong>{move.k}</strong> 个野人到 <strong>{move.to}</strong>。
+            </li>
+          ))}
+        </ol>
       </section>
     </>
   );
@@ -196,8 +257,8 @@ function RiverScene({ state }: { state: State }) {
 function BankPeople({ bigs, kids }: { bigs: number; kids: number }) {
   return (
     <div className="river-people">
-      {Array.from({ length: bigs }, (_, i) => <span key={'b' + i} className="person big">👨</span>)}
-      {Array.from({ length: kids }, (_, i) => <span key={'k' + i} className="person kid">🧒</span>)}
+      {Array.from({ length: bigs }, (_, i) => <span key={'b' + i} className="person big" title="传教士">🧑‍🏫</span>)}
+      {Array.from({ length: kids }, (_, i) => <span key={'k' + i} className="person kid" title="野人">🧑</span>)}
       {bigs === 0 && kids === 0 && <span className="person empty">（空）</span>}
     </div>
   );
@@ -207,13 +268,13 @@ function StateChip({ state }: { state: State }) {
   return (
     <div className="state-chip">
       <div className="state-chip-row">
-        <span title="左岸大人">👨×{state.lb}</span>
-        <span title="左岸小朋友">🧒×{state.lk}</span>
+        <span title="左岸传教士">🧑‍🏫×{state.lb}</span>
+        <span title="左岸野人">🧑×{state.lk}</span>
       </div>
       <div className="state-chip-mid">{state.boat === 'L' ? '🚣 ⇠' : '⇢ 🚣'}</div>
       <div className="state-chip-row">
-        <span title="右岸大人">👨×{rb(state)}</span>
-        <span title="右岸小朋友">🧒×{rk(state)}</span>
+        <span title="右岸传教士">🧑‍🏫×{rb(state)}</span>
+        <span title="右岸野人">🧑×{rk(state)}</span>
       </div>
     </div>
   );
@@ -227,7 +288,7 @@ function LegalMovesPanel({ moves }: { moves: { b: number; k: number; next: State
       <ul style={{ paddingLeft: '1.1rem', margin: '.3rem 0' }}>
         {moves.map((m, i) => (
           <li key={i}>
-            带 <strong>{m.b}</strong> 个大人 + <strong>{m.k}</strong> 个小朋友划过去
+            带 <strong>{m.b}</strong> 个传教士 + <strong>{m.k}</strong> 个野人划过去
           </li>
         ))}
       </ul>
@@ -319,7 +380,7 @@ function StateGraphView({
           );
         })}
         <text x={PAD_X} y={H - 12} fontSize="11" fill="#6b5a43">
-          每个圆圈：左岸大人 / 左岸小朋友（船在哪边）。共 {graph.nodes.length} 个合法状态。
+          每个圆圈：左岸传教士 / 左岸野人（船在哪边）。共 {graph.nodes.length} 个合法状态。
         </text>
       </svg>
       <div className="legend" style={{ marginTop: '.4rem' }}>
@@ -327,7 +388,7 @@ function StateGraphView({
         <span><span className="dot" style={{ background: '#b46a1a' }} /> 目标</span>
         <span><span className="dot" style={{ background: '#ff7e5f' }} /> 你走过的路径</span>
         <span><span className="dot" style={{ background: '#69db7c' }} /> 最短路径（11 步）</span>
-        <span>共 {TOTAL_BIG} 个大人 + {TOTAL_KID} 个小朋友</span>
+        <span>共 {TOTAL_BIG} 个传教士 + {TOTAL_KID} 个野人</span>
       </div>
     </div>
   );
