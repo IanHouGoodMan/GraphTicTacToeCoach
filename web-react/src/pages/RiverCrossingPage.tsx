@@ -91,7 +91,8 @@ export default function RiverCrossingPage() {
           有 3 个<strong>传教士</strong>和 3 个<strong>野人</strong>要过河，只有一条小船，
           最多坐 <strong>{BOAT_CAP}</strong> 个人。规则：
           <strong>任何一岸只要有传教士，野人的人数就不能超过传教士</strong>
-          （否则传教士会有危险）。船每次至少要 1 个人划。
+          （否则传教士会有危险）。船每次至少要 1 个人划；在这个版本里，
+          <strong>不管是传教士还是野人，都可以划船</strong>。
         </p>
         <p className="lead">
           这是一个非常经典的「<Link to="/concepts#modeling">把现实问题变成图</Link>」的例子：每一种「左岸有几个传教士、几个野人、船在哪边」就是一张「状态卡」，
@@ -109,6 +110,7 @@ export default function RiverCrossingPage() {
         <ul>
           <li>开局是：左岸有 3 个传教士、3 个野人，右岸没人，船在左岸。</li>
           <li>每一步只做一件事：让 1 个人或 2 个人坐船，从船所在的这一岸划到另一岸。</li>
+          <li>经典教材里的这个版本默认：传教士能划船，野人也能划船；如果额外规定“某个人不会划”，那就是另一种变体题了。</li>
           <li>检查规则时，要同时看两岸。只要某一岸还有传教士，野人数量就不能比传教士多。</li>
           <li>如果某一岸没有传教士了，比如 0 个传教士 + 2 个野人，这是允许的，因为只有野人的岸不会发生“吃掉传教士”的问题。</li>
         </ul>
@@ -130,12 +132,12 @@ export default function RiverCrossingPage() {
             </p>
             <div className="river-counter">
               <button className="btn outline" onClick={() => adjustBoat('b', -1)} disabled={boatSel.b === 0}>−</button>
-              <span>🧑‍🏫 传教士 × {boatSel.b}</span>
+              <span className="river-counter-label"><RoleAvatar kind="missionary" /> 传教士 × {boatSel.b}</span>
               <button className="btn outline" onClick={() => adjustBoat('b', +1)}>+</button>
             </div>
             <div className="river-counter">
               <button className="btn outline" onClick={() => adjustBoat('k', -1)} disabled={boatSel.k === 0}>−</button>
-              <span>🧑 野人 × {boatSel.k}</span>
+              <span className="river-counter-label"><RoleAvatar kind="cannibal" /> 野人 × {boatSel.k}</span>
               <button className="btn outline" onClick={() => adjustBoat('k', +1)}>+</button>
             </div>
             <div className="actions">
@@ -257,10 +259,22 @@ function RiverScene({ state }: { state: State }) {
 function BankPeople({ bigs, kids }: { bigs: number; kids: number }) {
   return (
     <div className="river-people">
-      {Array.from({ length: bigs }, (_, i) => <span key={'b' + i} className="person big" title="传教士">🧑‍🏫</span>)}
-      {Array.from({ length: kids }, (_, i) => <span key={'k' + i} className="person kid" title="野人">🧑</span>)}
+      {Array.from({ length: bigs }, (_, i) => <RoleAvatar key={'b' + i} kind="missionary" />)}
+      {Array.from({ length: kids }, (_, i) => <RoleAvatar key={'k' + i} kind="cannibal" />)}
       {bigs === 0 && kids === 0 && <span className="person empty">（空）</span>}
     </div>
+  );
+}
+
+function RoleAvatar({ kind }: { kind: 'missionary' | 'cannibal' }) {
+  const label = kind === 'missionary' ? '传' : '野';
+  const title = kind === 'missionary' ? '传教士' : '野人';
+
+  return (
+    <span className={`role-avatar ${kind}`} title={title} aria-label={title}>
+      <span className="role-avatar-halo" />
+      <span className="role-avatar-face">{label}</span>
+    </span>
   );
 }
 
@@ -268,13 +282,13 @@ function StateChip({ state }: { state: State }) {
   return (
     <div className="state-chip">
       <div className="state-chip-row">
-        <span title="左岸传教士">🧑‍🏫×{state.lb}</span>
-        <span title="左岸野人">🧑×{state.lk}</span>
+        <span title="左岸传教士"><RoleAvatar kind="missionary" /> ×{state.lb}</span>
+        <span title="左岸野人"><RoleAvatar kind="cannibal" /> ×{state.lk}</span>
       </div>
       <div className="state-chip-mid">{state.boat === 'L' ? '🚣 ⇠' : '⇢ 🚣'}</div>
       <div className="state-chip-row">
-        <span title="右岸传教士">🧑‍🏫×{rb(state)}</span>
-        <span title="右岸野人">🧑×{rk(state)}</span>
+        <span title="右岸传教士"><RoleAvatar kind="missionary" /> ×{rb(state)}</span>
+        <span title="右岸野人"><RoleAvatar kind="cannibal" /> ×{rk(state)}</span>
       </div>
     </div>
   );
